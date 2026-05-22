@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { loadWorkflowIndex, loadModels, loadSEOIndex, keywordToSlug } from "@/lib/load-index";
 
+export const dynamicParams = false;
+
 type Props = { params: Promise<{ model: string }> };
 
 function matchesModel(model: string, w: { models: { best: string; good: string[]; limited: string[] } }): boolean {

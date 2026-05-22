@@ -5,6 +5,8 @@ import type { WorkflowMeta } from "@/lib/workflows";
 import type { SEOEntry, ExpandedContent } from "@/lib/load-index";
 import WorkflowClient from "./workflow-client";
 
+export const dynamicParams = false;
+
 export type RelatedWorkflows = {
   sameCategory: WorkflowMeta[];
   trending: WorkflowMeta[];

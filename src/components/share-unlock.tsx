@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const STORAGE_PREFIX = "unlock:";
 
@@ -24,7 +24,11 @@ export default function ShareUnlock({
   locked: boolean;
   children: React.ReactNode;
 }) {
-  const [unlocked, setUnlocked] = useState(() => !locked || isUnlocked(slug));
+  const [unlocked, setUnlocked] = useState(() => !locked);
+
+  useEffect(() => {
+    if (locked) setUnlocked(isUnlocked(slug));
+  }, [locked, slug]);
 
   if (!locked || unlocked) return <>{children}</>;
 

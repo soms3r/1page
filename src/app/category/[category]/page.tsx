@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { loadWorkflowIndex, loadCategories, loadSEOIndex, keywordToSlug } from "@/lib/load-index";
 
+export const dynamicParams = false;
+
 type Props = { params: Promise<{ category: string }> };
 
 export async function generateStaticParams() {

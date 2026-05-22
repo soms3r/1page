@@ -50,6 +50,12 @@ public/expanded/
 # vercel
 .vercel
 
+# design archives
+/New/
+
+# shadcn/ui config (deprecated)
+/components.json
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

@@ -72,15 +72,16 @@ export default function WorkflowClient({
   });
   const [output, setOutput] = useState("");
   const [copied, setCopied] = useState(false);
-  const [bookmarked, setBookmarked] = useState(() => {
-    if (typeof window !== "undefined") return !!localStorage.getItem(`bm:${slug}`);
-    return false;
-  });
+  const [bookmarked, setBookmarked] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showPreview, setShowPreview] = useState(false);
   const outputRef = useRef<HTMLDivElement>(null);
 
   const hasVariables = workflow.variables && workflow.variables.length > 0;
+
+  useEffect(() => {
+    setBookmarked(!!localStorage.getItem(`bm:${slug}`));
+  }, [slug]);
 
   useEffect(() => {
     if (showPreview && outputRef.current) {

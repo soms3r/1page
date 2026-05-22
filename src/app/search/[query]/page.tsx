@@ -5,6 +5,8 @@ import { loadWorkflowIndex, loadSEOIndex, keywordToSlug } from "@/lib/load-index
 import type { SEOEntry } from "@/lib/load-index";
 import type { WorkflowMeta } from "@/lib/workflows";
 
+export const dynamicParams = false;
+
 type Props = { params: Promise<{ query: string }> };
 type FlatEntry = { slug: string; original: string; seo: SEOEntry; workflow: WorkflowMeta };
 
