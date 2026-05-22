@@ -24,7 +24,7 @@ export async function loadSearchIndex(): Promise<void> {
   if (loadPromise) return loadPromise;
 
   loadPromise = (async () => {
-    const res = await fetch("/content/search-index.json");
+    const res = await fetch("/search-index.json");
     if (!res.ok) {
       throw new Error(`Search index fetch failed: ${res.status}`);
     }

@@ -1,9 +1,9 @@
 import fs from "fs";
 import path from "path";
-import { parseWorkflow } from "../lib/parser";
+import matter from "gray-matter";
 
 const WORKFLOWS_DIR = path.join(process.cwd(), "content", "workflows");
-const OUTPUT_PATH = path.join(process.cwd(), "content", "search-index.json");
+const OUTPUT_PATH = path.join(process.cwd(), "public", "search-index.json");
 
 type SearchIndexEntry = {
   title: string;
@@ -36,22 +36,38 @@ function buildSearchIndex(): void {
 
     const files = fs.readdirSync(categoryPath).filter((f) => f.endsWith(".md"));
     for (const file of files) {
-      const content = fs.readFileSync(path.join(categoryPath, file), "utf-8");
-      const parsed = parseWorkflow(content);
-      if (parsed) {
+      try {
+        const content = fs.readFileSync(path.join(categoryPath, file), "utf-8");
+        const parsed = matter(content);
+        const data = parsed.data as Record<string, unknown>;
+
         index.push({
-          title: parsed.meta.title,
-          slug: parsed.meta.slug,
-          description: parsed.meta.description,
-          category: parsed.meta.category,
-          tags: parsed.meta.tags,
-          models: parsed.meta.models,
-          updated: parsed.meta.updated,
-          featured: parsed.meta.featured,
-          locked: parsed.meta.locked,
+          title: String(data.title || ""),
+          slug: String(data.slug || ""),
+          description: String(data.description || ""),
+          category: String(data.category || ""),
+          tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
+          models: {
+            best: String((data.models as Record<string, unknown>)?.best || ""),
+            good: Array.isArray((data.models as Record<string, unknown>)?.good)
+              ? ((data.models as Record<string, unknown>).good as string[]).map(String)
+              : [],
+            limited: Array.isArray((data.models as Record<string, unknown>)?.limited)
+              ? ((data.models as Record<string, unknown>).limited as string[]).map(String)
+              : [],
+          },
+          updated: String(data.updated || ""),
+          featured: Boolean(data.featured),
+          locked: Boolean(data.locked),
         });
+      } catch {
+        // skip invalid files
       }
     }
+  }
+
+  if (!fs.existsSync(path.dirname(OUTPUT_PATH))) {
+    fs.mkdirSync(path.dirname(OUTPUT_PATH), { recursive: true });
   }
 
   fs.writeFileSync(OUTPUT_PATH, JSON.stringify(index, null, 2));

@@ -1,9 +1,8 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { getAllWorkflows, getWorkflowBySlug } from "@/lib/workflows";
+import { loadWorkflowIndex, loadWorkflowContent, loadSEOIndex, loadExpandedContent } from "@/lib/load-index";
 import type { WorkflowMeta } from "@/lib/workflows";
-import { loadSEOIndex, loadExpandedContent } from "@/lib/load-index";
-import type { SEOEntry } from "@/lib/load-index";
+import type { SEOEntry, ExpandedContent } from "@/lib/load-index";
 import WorkflowClient from "./workflow-client";
 
 export type RelatedWorkflows = {
@@ -17,23 +16,15 @@ function computeRelated(all: WorkflowMeta[], slug: string): RelatedWorkflows {
   if (!current) return { sameCategory: [], trending: [], tagMatched: [] };
 
   const others = all.filter((w) => w.slug !== slug);
-
-  const sameCategory = others
-    .filter((w) => w.category === current.category)
-    .slice(0, 3);
-
+  const sameCategory = others.filter((w) => w.category === current.category).slice(0, 3);
   const trending = [...others]
     .sort((a, b) => {
       if (a.featured !== b.featured) return a.featured ? -1 : 1;
       return new Date(b.updated).getTime() - new Date(a.updated).getTime();
     })
     .slice(0, 3);
-
   const tagMatched = [...others]
-    .map((w) => ({
-      w,
-      overlap: w.tags.filter((t) => current.tags.includes(t)).length,
-    }))
+    .map((w) => ({ w, overlap: w.tags.filter((t) => current.tags.includes(t)).length }))
     .filter((x) => x.overlap > 0)
     .sort((a, b) => b.overlap - a.overlap)
     .slice(0, 3)
@@ -42,25 +33,20 @@ function computeRelated(all: WorkflowMeta[], slug: string): RelatedWorkflows {
   return { sameCategory, trending, tagMatched };
 }
 
-function getSEOForSlug(slug: string, seo: SEOEntry[]): SEOEntry | undefined {
-  return seo.find((e) => e.slug === slug);
-}
-
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateStaticParams() {
-  const workflows = getAllWorkflows();
-  return workflows.map((w) => ({ slug: w.slug }));
+  const index = loadWorkflowIndex();
+  return index.map((w) => ({ slug: w.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const workflow = getWorkflowBySlug(slug);
-
+  const workflow = loadWorkflowContent(slug);
   if (!workflow) return { title: "Workflow Not Found" };
 
   const seo = loadSEOIndex();
-  const entry = getSEOForSlug(slug, seo);
+  const entry = seo.find((e) => e.slug === slug);
 
   return {
     title: entry?.title ?? `${workflow.title} — 1 Page`,
@@ -78,13 +64,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function WorkflowPage({ params }: Props) {
   const { slug } = await params;
-  const workflow = getWorkflowBySlug(slug);
+  const workflow = loadWorkflowContent(slug);
+  if (!workflow) notFound();
 
-  if (!workflow) {
-    notFound();
-  }
-
-  const all = getAllWorkflows();
+  const all = loadWorkflowIndex();
   const related = computeRelated(all, slug);
   const expanded = loadExpandedContent(slug);
 

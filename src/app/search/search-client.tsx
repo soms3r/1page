@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import Link from "@/components/app-link";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { loadSearchIndex, searchWorkflows, getAllModels, getCategories, getSearchIndex } from "@/lib/search";
 import type { WorkflowMeta } from "@/lib/workflows";
@@ -52,12 +52,10 @@ export default function SearchClient() {
       setLoaded(true);
       runSearch(query, category);
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleInput = (value: string) => {
     setQuery(value);
-
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
       const filters: SearchFilters = {};
@@ -103,18 +101,24 @@ export default function SearchClient() {
 
   return (
     <div className="space-y-6">
-      <Link href="/" className="text-[var(--accent)] text-sm">&lt; Back</Link>
+      <div className="flex items-center gap-2 text-xs text-[var(--muted)]">
+        <Link href="/" className="text-[var(--accent)] hover:underline">/</Link>
+        <span className="text-[var(--accent)]">search</span>
+      </div>
 
-      <div className="text-lg font-bold text-[var(--accent)]">$ search</div>
+      <div>
+        <h1 className="text-xl font-bold text-[var(--accent)]">search</h1>
+        <p className="text-xs text-[var(--muted)] mt-1">Find AI workflows by keyword, category, or model</p>
+      </div>
 
-      <div className="flex gap-2 items-center border border-[var(--border)] px-3 py-2">
-        <span className="text-[var(--accent)] font-bold text-sm">$ search</span>
+      <div className="flex gap-2 items-center border border-[var(--border)] rounded-lg px-3 py-2 bg-[var(--surface)]">
+        <span className="text-[var(--accent)] font-bold text-sm">$</span>
         <input
           ref={inputRef}
           type="text"
           value={query}
           onChange={(e) => handleInput(e.target.value)}
-          placeholder="type keywords..."
+          placeholder="Search workflows..."
           className="flex-1 bg-transparent border-0 outline-none text-sm"
           autoFocus
           spellCheck={false}
@@ -126,7 +130,7 @@ export default function SearchClient() {
         <select
           value={category}
           onChange={(e) => handleCategoryChange(e.target.value)}
-          className="flex-1"
+          className="flex-1 rounded-lg"
         >
           <option value="">all categories</option>
           {categories.map((c) => (
@@ -136,7 +140,7 @@ export default function SearchClient() {
         <select
           value={model}
           onChange={(e) => handleModelChange(e.target.value)}
-          className="flex-1"
+          className="flex-1 rounded-lg"
         >
           <option value="">all models</option>
           {allModels.map((m) => (
@@ -156,12 +160,12 @@ export default function SearchClient() {
               key={w.slug}
               href={`/workflows/${w.slug}`}
               prefetch={false}
-              className="block pl-4 py-1.5 border-l-2 border-[var(--border)] hover:border-[var(--accent)] hover:bg-[#111] transition-colors"
+              className="flex items-center gap-3 py-2 px-3 hover:bg-[var(--hover)] rounded-lg border-b border-[var(--border)] last:border-0"
             >
-              <span className="text-[var(--accent)]">&gt; {w.title}</span>
-              <span className="text-[var(--muted)] ml-2">[{w.category}]</span>
-              <span className="text-xs text-[var(--muted)] ml-2">best: {w.models.best}</span>
-              <span className="block text-xs text-[var(--muted)] mt-0.5">{w.description}</span>
+              <span className="text-[var(--muted)] text-xs">file:</span>
+              <span className="text-[var(--accent)] text-sm font-medium">{w.title}</span>
+              <span className="text-[10px] text-[var(--muted)] border border-[var(--border)] px-1.5 py-0.5 rounded">[{w.category}]</span>
+              <span className="text-xs text-[var(--muted)] hidden sm:block truncate flex-1">{w.description}</span>
             </Link>
           ))}
           {results.length > 50 && (

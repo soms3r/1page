@@ -1,282 +1,138 @@
-"use client";
+import Link from "next/link";
 
-import { useEffect, useState } from "react";
-import Link from "@/components/app-link";
-import Turnstile from "react-turnstile";
-import { trackPageView } from "@/lib/analytics";
-import { slugify } from "@/lib/validator";
+const GITHUB_REPO = "soms3r/1page";
+const GITHUB_ISSUES = `https://github.com/${GITHUB_REPO}/issues/new?template=workflow-submission.yml`;
+const GITHUB_DISCUSSIONS = `https://github.com/${GITHUB_REPO}/discussions/new?category=workflows`;
+const GITHUB_CONTENT = `https://github.com/${GITHUB_REPO}/tree/main/content/workflows`;
 
-const CATEGORIES = ["marketing", "development", "writing", "design", "business", "other"];
+export default function SubmitPage() {
+  return (
+    <div className="space-y-8">
+      <div className="flex items-center gap-2 text-xs text-[var(--muted)]">
+        <Link href="/" className="text-[var(--accent)] hover:underline">/</Link>
+        <span className="text-[var(--accent)]">submit</span>
+      </div>
 
-type FormData = {
-  title: string;
-  description: string;
-  category: string;
-  tags: string;
-  content: string;
-  name: string;
-  email: string;
-};
+      <div>
+        <h1 className="text-xl font-bold text-[var(--accent)]">Submit Workflow</h1>
+        <p className="text-sm text-[var(--muted)] mt-1">
+          Contribute to the 1 Page community by submitting your AI workflow.
+        </p>
+      </div>
 
-const EMPTY_FORM: FormData = {
-  title: "",
-  description: "",
-  category: "",
-  tags: "",
-  content: "",
-  name: "",
-  email: "",
-};
+      <div className="border border-[var(--border)] rounded-lg p-6 bg-[var(--surface)] space-y-6">
+        <div>
+          <h2 className="text-sm font-bold mb-2">GitHub Workflow</h2>
+          <p className="text-xs text-[var(--muted)] mb-4">
+            All workflows are stored as Markdown files with YAML frontmatter in the GitHub repository.
+            Choose your preferred submission method:
+          </p>
+        </div>
 
-function assembleMarkdown(data: FormData): string {
-  const tags = data.tags
-    .split(",")
-    .map((t) => t.trim())
-    .filter(Boolean);
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <a
+            href={GITHUB_ISSUES}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="border border-[var(--border)] rounded-lg p-4 hover:border-[var(--accent)] hover:bg-[var(--hover)] block"
+          >
+            <div className="text-[var(--accent)] font-bold text-sm mb-1">Option A</div>
+            <div className="text-sm font-medium mb-1">Open Issue Template</div>
+            <p className="text-xs text-[var(--muted)]">
+              Use our GitHub Issue template to submit your workflow. Fill in the form and we&apos;ll review it.
+            </p>
+          </a>
 
-  return `---
-title: "${data.title.replace(/"/g, '\\"')}"
-slug: "${slugify(data.title)}"
-description: "${data.description.replace(/"/g, '\\"')}"
-category: "${data.category}"
-tags: [${tags.map((t) => `"${t}"`).join(", ")}]
+          <a
+            href={GITHUB_DISCUSSIONS}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="border border-[var(--border)] rounded-lg p-4 hover:border-[var(--accent)] hover:bg-[var(--hover)] block"
+          >
+            <div className="text-[var(--accent)] font-bold text-sm mb-1">Option B</div>
+            <div className="text-sm font-medium mb-1">Start a Discussion</div>
+            <p className="text-xs text-[var(--muted)]">
+              Share your workflow in GitHub Discussions. Perfect for getting feedback before submitting.
+            </p>
+          </a>
+
+          <a
+            href={GITHUB_CONTENT}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="border border-[var(--border)] rounded-lg p-4 hover:border-[var(--accent)] hover:bg-[var(--hover)] block"
+          >
+            <div className="text-[var(--accent)] font-bold text-sm mb-1">Option C</div>
+            <div className="text-sm font-medium mb-1">PR Directly</div>
+            <p className="text-xs text-[var(--muted)]">
+              Create your workflow file and open a Pull Request directly to the content directory.
+            </p>
+          </a>
+        </div>
+      </div>
+
+      <div className="border border-[var(--border)] rounded-lg p-6 bg-[var(--surface)] space-y-4">
+        <h2 className="text-sm font-bold">Workflow Format</h2>
+        <p className="text-xs text-[var(--muted)]">
+          Workflows are Markdown files with YAML frontmatter. Here&apos;s the template:
+        </p>
+        <pre className="bg-[var(--background)] border border-[var(--border)] rounded-lg p-4 text-xs overflow-x-auto">
+{`---
+title: "Your Workflow Title"
+slug: your-workflow-slug
+description: "Brief description of what this workflow does"
+category: "marketing"
+tags: ["tag1", "tag2", "tag3"]
+models:
+  best: "gpt-4o"
+  good: ["claude-sonnet-4"]
+  limited: ["gpt-3.5-turbo"]
+updated: "2026-01-01"
+featured: false
+locked: false
+---
+
+Write your workflow prompt template here.
+
+Use {{variable_name}} for user inputs.
+
+Use {{var || default}} for optional inputs with defaults.`}
+        </pre>
+        <div className="text-xs text-[var(--muted)]">
+          <p>Valid categories: marketing, development, writing, design, business, research, education, productivity, other</p>
+        </div>
+      </div>
+
+      <div className="border border-[var(--border)] rounded-lg p-6 bg-[var(--surface)]">
+        <h2 className="text-sm font-bold mb-2">Quick Copy Template</h2>
+        <p className="text-xs text-[var(--muted)] mb-3">
+          Copy this blank template, fill it in, and paste it into a GitHub issue:
+        </p>
+        <pre className="bg-[var(--background)] border border-[var(--border)] rounded-lg p-4 text-xs overflow-x-auto select-all cursor-pointer">
+{`---
+title: ""
+slug: ""
+description: ""
+category: ""
+tags: []
 models:
   best: ""
   good: []
   limited: []
 updated: "${new Date().toISOString().split("T")[0]}"
 featured: false
+locked: false
 ---
 
-${data.content || "Write your workflow prompt template here. Use {{variable_name}} for user inputs."}
-`;
-}
+`}
+        </pre>
+      </div>
 
-export default function SubmitPage() {
-  useEffect(() => { trackPageView("/submit"); }, []);
-
-  const [step, setStep] = useState<"form" | "preview" | "done">("form");
-  const [form, setForm] = useState<FormData>(EMPTY_FORM);
-  const [turnstileToken, setTurnstileToken] = useState("");
-  const [error, setError] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
-
-  const updateField = (field: keyof FormData, value: string) => {
-    setForm((prev) => ({ ...prev, [field]: value }));
-    if (fieldErrors[field]) {
-      const rest = { ...fieldErrors };
-      delete rest[field];
-      setFieldErrors(rest);
-    }
-  };
-
-  const validate = (): boolean => {
-    const errs: Record<string, string> = {};
-    if (!form.title.trim()) errs.title = "Title is required";
-    if (!form.description.trim()) errs.description = "Description is required";
-    if (!form.category) errs.category = "Category is required";
-    if (!slugify(form.title)) errs.title = "Title must produce a valid slug";
-    if (!form.content.trim()) errs.content = "Workflow content is required";
-    setFieldErrors(errs);
-    return Object.keys(errs).length === 0;
-  };
-
-  const handlePreview = () => {
-    if (!validate()) return;
-    setStep("preview");
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-
-    if (!validate()) return;
-
-    if (!turnstileToken) {
-      setError("Please complete the verification.");
-      return;
-    }
-
-    setSubmitting(true);
-    const markdown = assembleMarkdown(form);
-
-    try {
-      const res = await fetch("/api/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          markdown,
-          name: form.name || null,
-          email: form.email || null,
-          turnstileToken,
-          slug: slugify(form.title),
-        }),
-      });
-
-      if (res.ok) {
-        setStep("done");
-      } else {
-        const data = await res.json();
-        setError(data.error || "Submission failed.");
-      }
-    } catch {
-      setError("Network error. Try again.");
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  const previewMarkdown = assembleMarkdown(form);
-
-  const handleReset = () => {
-    setForm(EMPTY_FORM);
-    setTurnstileToken("");
-    setError("");
-    setFieldErrors({});
-    setStep("form");
-  };
-
-  return (
-    <div className="space-y-6">
-      <Link href="/" className="text-[var(--accent)] text-sm">&lt; Back</Link>
-
-      <div className="text-lg font-bold text-[var(--accent)]">$ submit</div>
-
-      {step === "form" && (
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="text-xs text-[var(--muted)] block mb-1">Title *</label>
-            <input
-              type="text"
-              value={form.title}
-              onChange={(e) => updateField("title", e.target.value)}
-              placeholder="e.g. Facebook Ad Generator"
-              className="w-full text-sm"
-            />
-            {form.title && (
-              <div className="text-xs text-[var(--muted)] mt-1">Slug: {slugify(form.title)}</div>
-            )}
-            {fieldErrors.title && <div className="text-red-400 text-xs mt-1">{fieldErrors.title}</div>}
-          </div>
-
-          <div>
-            <label className="text-xs text-[var(--muted)] block mb-1">Description *</label>
-            <textarea
-              value={form.description}
-              onChange={(e) => updateField("description", e.target.value)}
-              placeholder="Briefly describe what this workflow does..."
-              rows={3}
-              className="w-full text-sm"
-            />
-            {fieldErrors.description && <div className="text-red-400 text-xs mt-1">{fieldErrors.description}</div>}
-          </div>
-
-          <div>
-            <label className="text-xs text-[var(--muted)] block mb-1">Category *</label>
-            <select
-              value={form.category}
-              onChange={(e) => updateField("category", e.target.value)}
-              className="w-full text-sm"
-            >
-              <option value="">Select a category</option>
-              {CATEGORIES.map((c) => (
-                <option key={c} value={c}>{c}</option>
-              ))}
-            </select>
-            {fieldErrors.category && <div className="text-red-400 text-xs mt-1">{fieldErrors.category}</div>}
-          </div>
-
-          <div>
-            <label className="text-xs text-[var(--muted)] block mb-1">Tags (comma-separated, optional)</label>
-            <input
-              type="text"
-              value={form.tags}
-              onChange={(e) => updateField("tags", e.target.value)}
-              placeholder="e.g. facebook, ads, copywriting"
-              className="w-full text-sm"
-            />
-          </div>
-
-          <div>
-            <label className="text-xs text-[var(--muted)] block mb-1">Workflow Content (Markdown) *</label>
-            <textarea
-              value={form.content}
-              onChange={(e) => updateField("content", e.target.value)}
-              placeholder={`Write your workflow prompt here.\n\nUse {{variable_name}} for user inputs.\nUse {{var || default}} for optional inputs with defaults.`}
-              rows={12}
-              className="w-full text-sm font-mono"
-            />
-            {fieldErrors.content && <div className="text-red-400 text-xs mt-1">{fieldErrors.content}</div>}
-          </div>
-
-          <hr className="border-[var(--border)]" />
-
-          <div className="space-y-2">
-            <div className="text-xs text-[var(--muted)]">Submitter info (optional)</div>
-            <input
-              type="text"
-              value={form.name}
-              onChange={(e) => updateField("name", e.target.value)}
-              placeholder="Your name"
-              className="w-full text-sm"
-            />
-            <input
-              type="email"
-              value={form.email}
-              onChange={(e) => updateField("email", e.target.value)}
-              placeholder="Your email"
-              className="w-full text-sm"
-            />
-          </div>
-
-          <div>
-            <Turnstile
-              sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITEKEY || "1x00000000000000000000AA"}
-              onVerify={(token) => setTurnstileToken(token)}
-              theme="dark"
-            />
-          </div>
-
-          {error && <div className="text-red-400 text-xs">{error}</div>}
-
-          <div className="flex gap-2">
-            <button type="button" onClick={handlePreview} disabled={!form.title.trim() || !form.description.trim() || !form.content.trim()}>
-              Preview
-            </button>
-            <button type="submit" disabled={!turnstileToken || submitting}>
-              {submitting ? "Submitting..." : "Submit"}
-            </button>
-          </div>
-        </form>
-      )}
-
-      {step === "preview" && (
-        <div className="space-y-4">
-          <div className="flex gap-2">
-            <button onClick={() => setStep("form")}>Edit</button>
-            <button onClick={handleSubmit} disabled={submitting}>
-              {submitting ? "Submitting..." : "Confirm & Submit"}
-            </button>
-          </div>
-          <pre className="border border-[var(--border)] p-4 text-sm whitespace-pre-wrap overflow-x-auto">{previewMarkdown}</pre>
-        </div>
-      )}
-
-      {step === "done" && (
-        <div className="space-y-4">
-          <div className="text-[var(--accent)]">✓ Submission received. Awaiting admin review.</div>
-          <div className="text-xs text-[var(--muted)]">
-            Your workflow has been saved to the pending queue.
-          </div>
-          <div className="flex gap-3">
-            <button onClick={handleReset} className="bg-transparent border border-[var(--accent)] text-[var(--accent)]">
-              Submit Another
-            </button>
-            <Link href="/" className="text-[var(--accent)] text-sm self-center">Back to terminal</Link>
-          </div>
-        </div>
-      )}
+      <div className="flex gap-3 text-xs text-[var(--muted)] pt-2">
+        <Link href="/trending" className="text-[var(--accent)] hover:underline">Trending →</Link>
+        <Link href="/featured" className="text-[var(--accent)] hover:underline">Featured →</Link>
+        <Link href="/search" className="text-[var(--accent)] hover:underline">Search →</Link>
+      </div>
     </div>
   );
 }

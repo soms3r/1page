@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface": "#e5e2e1",
+                        "surface-container-low": "#1c1b1b",
+                        "error-container": "#93000a",
+                        "on-tertiary-container": "#7a5b3c",
+                        "surface-container": "#201f1f",
+                        "surface-container-highest": "#353534",
+                        "on-background": "#e5e2e1",
+                        "surface": "#131313",
+                        "on-error": "#690005",
+                        "surface-bright": "#3a3939",
+                        "primary-fixed-dim": "#00e639",
+                        "secondary-fixed": "#e5e2e1",
+                        "inverse-on-surface": "#313030",
+                        "outline": "#84967e",
+                        "on-tertiary-fixed-variant": "#5d4124",
+                        "surface-container-lowest": "#0e0e0e",
+                        "on-secondary-fixed": "#1c1b1b",
+                        "secondary-fixed-dim": "#c8c6c5",
+                        "primary-fixed": "#72ff70",
+                        "on-primary": "#003907",
+                        "secondary-container": "#474746",
+                        "surface-tint": "#00e639",
+                        "surface-variant": "#353534",
+                        "on-primary-container": "#007117",
+                        "surface-dim": "#131313",
+                        "on-secondary-fixed-variant": "#474746",
+                        "tertiary-fixed-dim": "#e7bf99",
+                        "surface-container-high": "#2a2a2a",
+                        "on-tertiary": "#442b10",
+                        "on-tertiary-fixed": "#2c1701",
+                        "background": "#131313",
+                        "on-secondary": "#313030",
+                        "outline-variant": "#3b4b37",
+                        "tertiary": "#fff8f4",
+                        "inverse-primary": "#006e16",
+                        "primary-container": "#00ff41",
+                        "on-primary-fixed": "#002203",
+                        "on-secondary-container": "#b7b5b4",
+                        "secondary": "#c8c6c5",
+                        "primary": "#ebffe2",
+                        "inverse-surface": "#e5e2e1",
+                        "on-error-container": "#ffdad6",
+                        "on-surface-variant": "#b9ccb2",
+                        "tertiary-container": "#ffd5ae",
+                        "on-primary-fixed-variant": "#00530e",
+                        "tertiary-fixed": "#ffdcbd",
+                        "error": "#ffb4ab"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "4px",
+                        "margin": "24px",
+                        "max_width": "1440px",
+                        "column_count": "12",
+                        "gutter": "12px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["JetBrains Mono"],
+                        "code-snippet": ["JetBrains Mono"],
+                        "headline-lg-mobile": ["JetBrains Mono"],
+                        "headline-lg": ["JetBrains Mono"],
+                        "label-caps": ["JetBrains Mono"],
+                        "headline-md": ["JetBrains Mono"],
+                        "body-sm": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["15px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "code-snippet": ["12px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["22px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "headline-lg": ["28px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "label-caps": ["11px", {"lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "700"}],
+                        "headline-md": ["18px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "body-sm": ["13px", {"lineHeight": "1.4", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        :root {
+            --mouse-x: 50%;
+            --mouse-y: 50%;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .scanlines {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 255, 0, 0.03));
+            background-size: 100% 3px, 4px 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        
+        #dot-canvas {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            background-color: #050505;
+        }
+
+        @keyframes flicker {
+            0% { opacity: 0.97; }
+            5% { opacity: 0.92; }
+            10% { opacity: 0.98; }
+            15% { opacity: 0.94; }
+            100% { opacity: 1; }
+        }
+        .flicker { animation: flicker 0.15s infinite alternate; }
+        .glitch-hover:hover { animation: flicker 0.05s infinite; }
+        
+        body {
+            background-color: #050505;
+            color: #e5e2e1;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .cli-input:focus + .block-cursor {
+            display: inline-block;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        .block-cursor {
+            width: 8px;
+            height: 1.2em;
+            background: #00e639;
+            display: none;
+            animation: blink 0.8s infinite;
+            vertical-align: middle;
+            margin-left: 2px;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #0e0e0e;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #353534;
+            border-radius: 0;
+        }
+        .filter-transition {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .category-item.active {
+            background-color: #00e639;
+            color: #002203;
+        }
+        .category-item.active .active-indicator {
+            display: block;
+        }
+    </style>
+</head>
+<body class="flex overflow-hidden relative">
+<!-- Interactive Dot Grid Canvas -->
+<canvas id="dot-canvas"></canvas>
+<!-- Scanline Overlay -->
+<div class="scanlines"></div>
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col h-screen p-4 space-y-2 bg-surface-container-low/80 backdrop-blur-sm border-r border-outline-variant w-64 shrink-0 font-code-snippet text-code-snippet z-20">
+<div class="mb-8 px-2">
+<h1 class="font-label-caps text-label-caps text-on-surface flex items-center gap-2">
+<span class="w-2 h-2 bg-primary-fixed-dim rounded-full flicker"></span>
+                OPERATOR_01
+            </h1>
+<p class="text-outline text-[10px] opacity-60">node_v22.4.0</p>
+</div>
+<nav class="flex-1 space-y-1" id="sidebar-nav">
+<div class="text-outline text-[10px] font-bold mb-2 px-2 uppercase tracking-widest opacity-40">/sys/nav</div>
+<button class="category-item active w-full flex items-center gap-3 px-3 py-2 transition-all duration-75 relative group text-left" data-category="ALL" onclick="filterCategory('ALL')">
+<span class="material-symbols-outlined text-[18px]" data-icon="folder_open">folder_open</span>
+<span class="font-bold">/workflows</span>
+<span class="active-indicator absolute right-2 w-1.5 h-4 bg-on-primary-fixed animate-pulse"></span>
+</button>
+<button class="category-item w-full flex items-center gap-3 text-on-secondary-container p-2 hover:text-primary-fixed hover:bg-surface-container-high transition-colors text-left relative group" data-category="CONTENT" onclick="filterCategory('CONTENT')">
+<span class="material-symbols-outlined text-[18px]" data-icon="article">article</span>
+<span>/content</span>
+<span class="active-indicator hidden absolute right-2 w-1.5 h-4 bg-on-primary-fixed animate-pulse"></span>
+</button>
+<button class="category-item w-full flex items-center gap-3 text-on-secondary-container p-2 hover:text-primary-fixed hover:bg-surface-container-high transition-colors text-left relative group" data-category="LOGIC" onclick="filterCategory('LOGIC')">
+<span class="material-symbols-outlined text-[18px]" data-icon="account_tree">account_tree</span>
+<span>/logic</span>
+<span class="active-indicator hidden absolute right-2 w-1.5 h-4 bg-on-primary-fixed animate-pulse"></span>
+</button>
+<button class="category-item w-full flex items-center gap-3 text-on-secondary-container p-2 hover:text-primary-fixed hover:bg-surface-container-high transition-colors text-left relative group" data-category="MEDIA" onclick="filterCategory('MEDIA')">
+<span class="material-symbols-outlined text-[18px]" data-icon="perm_media">perm_media</span>
+<span>/media</span>
+<span class="active-indicator hidden absolute right-2 w-1.5 h-4 bg-on-primary-fixed animate-pulse"></span>
+</button>
+<button class="category-item w-full flex items-center gap-3 text-on-secondary-container p-2 hover:text-primary-fixed hover:bg-surface-container-high transition-colors text-left relative group" data-category="PRODUCTION" onclick="filterCategory('PRODUCTION')">
+<span class="material-symbols-outlined text-[18px]" data-icon="rocket_launch">rocket_launch</span>
+<span>/production</span>
+<span class="active-indicator hidden absolute right-2 w-1.5 h-4 bg-on-primary-fixed animate-pulse"></span>
+</button>
+</nav>
+<div class="mt-auto pt-4 border-t border-outline-variant space-y-1">
+<button class="w-full bg-primary-container text-on-primary-fixed font-bold py-2 mb-4 glitch-hover text-label-caps border border-primary-fixed shadow-[0_0_10px_rgba(0,255,65,0.2)]">RUN_WORKFLOW</button>
+<a class="flex items-center gap-3 text-on-secondary-container p-2 hover:text-on-surface" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="help">help</span>
+<span>Docs</span>
+</a>
+<a class="flex items-center gap-3 text-on-secondary-container p-2 hover:text-on-surface" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="forum">forum</span>
+<span>Support</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<div class="flex-1 flex flex-col h-screen overflow-hidden z-10">
+<!-- TopNavBar -->
+<header class="bg-surface/80 backdrop-blur-md border-b border-outline-variant flex justify-between items-center w-full px-margin py-2 z-30 shrink-0 font-code-snippet text-code-snippet">
+<div class="font-headline-md text-headline-md text-primary-fixed-dim tracking-tighter flex items-center gap-2">
+<span class="opacity-50">$</span>
+<span class="flicker" id="current-path">cd /workflows</span>
+</div>
+<div class="hidden md:flex gap-6 items-center">
+<a class="text-primary-fixed-dim border-b-2 border-primary-fixed-dim" href="#">Status</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors" href="#">Logs</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors" href="#">Config</a>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative flex items-center bg-surface-container-lowest border border-outline-variant px-2 py-0.5">
+<span class="text-primary-fixed-dim text-xs mr-2 opacity-50">grep:</span>
+<input class="cli-input bg-transparent border-none focus:ring-0 text-code-snippet p-0 w-32 placeholder:text-outline/30" placeholder="pattern..." type="text"/>
+<span class="block-cursor"></span>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary-fixed-dim text-[20px]" data-icon="terminal">terminal</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary-fixed-dim text-[20px]" data-icon="settings">settings</button>
+</div>
+</header>
+<!-- Content Canvas -->
+<main class="flex-1 overflow-y-auto p-margin custom-scrollbar">
+<div class="max-w-max_width mx-auto">
+<!-- Directory Header -->
+<div class="flex items-center gap-4 mb-6">
+<h2 class="font-headline-lg text-headline-lg text-on-surface flex items-center gap-3">
+<span class="text-primary-fixed-dim flicker">$</span>
+<span id="ls-command">ls -la /workflows</span>
+</h2>
+<div class="h-[1px] flex-1 bg-outline-variant opacity-20"></div>
+</div>
+<!-- Workflow Groups -->
+<div class="space-y-8" id="workflow-container">
+<!-- CONTENT Group -->
+<section class="workflow-group filter-transition" data-group="CONTENT">
+<h3 class="font-code-snippet text-[11px] text-outline opacity-70 mb-3 flex items-center gap-2">
+<span class="text-primary-fixed-dim">drwxr-xr-x</span> <span>4 root content 4096</span> <span class="text-on-surface font-bold uppercase tracking-wider">CONTENT</span>
+</h3>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<div class="md:col-span-6 lg:col-span-4 flex flex-col bg-surface-container-low/60 backdrop-blur-sm border border-outline-variant group hover:border-primary-fixed-dim transition-all overflow-hidden">
+<div class="bg-surface-container-high/80 px-3 py-1 border-b border-outline-variant flex justify-between items-center">
+<span class="text-[10px] text-outline font-bold">W_ID: GEN_V4</span>
+<span class="text-[10px] text-primary-fixed-dim opacity-60">1.42kb</span>
+</div>
+<div class="p-3">
+<div class="flex justify-between items-start mb-2">
+<h4 class="font-headline-md text-headline-md text-on-surface group-hover:text-primary-fixed-dim transition-colors flicker">Blog Post Gen</h4>
+<span class="bg-primary-container text-on-primary-fixed font-bold text-[9px] px-1.5 py-0.5 rounded-sm">GPT-4o</span>
+</div>
+<p class="text-body-sm text-on-surface-variant mb-4 line-clamp-2 opacity-80">Automated long-form content architecture with semantic search optimization.</p>
+<div class="flex flex-wrap gap-1.5 mb-4">
+<span class="text-[9px] border border-outline-variant px-1 text-outline">#seo</span>
+<span class="text-[9px] border border-outline-variant px-1 text-outline">#copy</span>
+</div>
+<div class="flex justify-between items-center pt-2 border-t border-outline-variant/30">
+<span class="text-[9px] text-outline italic">LOC: 284</span>
+<div class="flex gap-1">
+<button class="p-1 hover:text-primary-fixed-dim transition-colors"><span class="material-symbols-outlined text-[16px]" data-icon="play_arrow">play_arrow</span></button>
+<button class="p-1 hover:text-primary-fixed-dim transition-colors"><span class="material-symbols-outlined text-[16px]" data-icon="terminal">terminal</span></button>
+</div>
+</div>
+</div>
+</div>
+<div class="md:col-span-6 lg:col-span-4 flex flex-col bg-surface-container-low/60 backdrop-blur-sm border border-outline-variant group hover:border-primary-fixed-dim transition-all overflow-hidden">
+<div class="bg-surface-container-high/80 px-3 py-1 border-b border-outline-variant flex justify-between items-center">
+<span class="text-[10px] text-outline font-bold">W_ID: OUT_01</span>
+<span class="text-[10px] text-primary-fixed-dim opacity-60">0.88kb</span>
+</div>
+<div class="p-3">
+<div class="flex justify-between items-start mb-2">
+<h4 class="font-headline-md text-headline-md text-on-surface group-hover:text-primary-fixed-dim transition-colors">Email Campaign</h4>
+<span class="bg-surface-container-highest text-on-surface-variant font-bold text-[9px] px-1.5 py-0.5 rounded-sm border border-outline-variant">Claude 3.5</span>
+</div>
+<p class="text-body-sm text-on-surface-variant mb-4 line-clamp-2 opacity-80">High-conversion cold outreach sequences with dynamic variables.</p>
+<div class="flex flex-wrap gap-1.5 mb-4">
+<span class="text-[9px] border border-outline-variant px-1 text-outline">#outreach</span>
+</div>
+<div class="flex justify-between items-center pt-2 border-t border-outline-variant/30">
+<span class="text-[9px] text-outline italic">LOC: 156</span>
+<div class="flex gap-1">
+<button class="p-1 hover:text-primary-fixed-dim transition-colors"><span class="material-symbols-outlined text-[16px]" data-icon="play_arrow">play_arrow</span></button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- LOGIC Group -->
+<section class="workflow-group filter-transition" data-group="LOGIC">
+<h3 class="font-code-snippet text-[11px] text-outline opacity-70 mb-3 flex items-center gap-2">
+<span class="text-primary-fixed-dim">drwxr-xr-x</span> <span>2 root content 1024</span> <span class="text-on-surface font-bold uppercase tracking-wider">LOGIC</span>
+</h3>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<div class="md:col-span-6 lg:col-span-4 flex flex-col bg-surface-container-low/60 backdrop-blur-sm border border-outline-variant group hover:border-primary-fixed-dim transition-all overflow-hidden">
+<div class="bg-surface-container-high/80 px-3 py-1 border-b border-outline-variant flex justify-between items-center">
+<span class="text-[10px] text-outline font-bold">W_ID: SQL_OPT</span>
+<span class="text-[10px] text-primary-fixed-dim opacity-60">3.1kb</span>
+</div>
+<div class="p-3">
+<div class="flex justify-between items-start mb-2">
+<h4 class="font-headline-md text-headline-md text-on-surface group-hover:text-primary-fixed-dim transition-colors flicker">SQL Optimizer</h4>
+<span class="bg-primary-container text-on-primary-fixed font-bold text-[9px] px-1.5 py-0.5 rounded-sm">o1-preview</span>
+</div>
+<p class="text-body-sm text-on-surface-variant mb-4 line-clamp-2 opacity-80">Analyze execution plans and suggest index optimizations for DBs.</p>
+<div class="flex justify-between items-center pt-2 border-t border-outline-variant/30">
+<span class="text-[9px] text-outline italic">LOC: 512</span>
+<div class="flex gap-1">
+<button class="p-1 hover:text-primary-fixed-dim transition-colors"><span class="material-symbols-outlined text-[16px]" data-icon="play_arrow">play_arrow</span></button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- PRODUCTION Group -->
+<section class="workflow-group filter-transition" data-group="PRODUCTION">
+<h3 class="font-code-snippet text-[11px] text-outline opacity-70 mb-3 flex items-center gap-2">
+<span class="text-primary-fixed-dim">drwxr-xr-x</span> <span>1 root content 512</span> <span class="text-on-surface font-bold uppercase tracking-wider">PRODUCTION</span>
+</h3>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<div class="md:col-span-6 lg:col-span-4 flex flex-col bg-surface-container-low/60 backdrop-blur-sm border border-outline-variant group hover:border-primary-fixed-dim transition-all overflow-hidden">
+<div class="bg-surface-container-high/80 px-3 py-1 border-b border-outline-variant flex justify-between items-center">
+<span class="text-[10px] text-outline font-bold">W_ID: DEPLOY_H</span>
+<span class="text-[10px] text-primary-fixed-dim opacity-60">12.5kb</span>
+</div>
+<div class="p-3">
+<div class="flex justify-between items-start mb-2">
+<h4 class="font-headline-md text-headline-md text-on-surface group-hover:text-primary-fixed-dim transition-colors">Cluster Health</h4>
+<span class="bg-primary-container text-on-primary-fixed font-bold text-[9px] px-1.5 py-0.5 rounded-sm">SYSTEM</span>
+</div>
+<p class="text-body-sm text-on-surface-variant mb-4 line-clamp-2 opacity-80">Automated health checks and self-healing protocols for K8s clusters.</p>
+<div class="flex justify-between items-center pt-2 border-t border-outline-variant/30">
+<span class="text-[9px] text-outline italic">LOC: 1024</span>
+<div class="flex gap-1">
+<button class="p-1 hover:text-primary-fixed-dim transition-colors"><span class="material-symbols-outlined text-[16px]" data-icon="monitoring">monitoring</span></button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- System Info Section -->
+<div class="mt-8">
+<div class="bg-surface-container/80 backdrop-blur-sm border border-outline-variant p-4 flex flex-col md:flex-row justify-between items-center gap-4 relative overflow-hidden">
+<div class="absolute inset-0 opacity-5 pointer-events-none">
+<div class="w-full h-full" style="background-image: repeating-linear-gradient(45deg, #00FF41 0, #00FF41 1px, transparent 0, transparent 50%); background-size: 10px 10px;"></div>
+</div>
+<div>
+<h4 class="font-headline-md text-headline-md text-primary-fixed-dim flicker mb-1">DEPLOY_READY</h4>
+<p class="text-[12px] text-on-surface-variant">12 nodes active. 0 failures. all systems nominal.</p>
+</div>
+<button class="border border-primary-fixed-dim text-primary-fixed-dim px-4 py-1.5 hover:bg-primary-fixed-dim hover:text-on-primary transition-all text-label-caps text-[10px] flicker">VIEW_METRICS</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest/90 backdrop-blur-md border-t border-outline-variant flex justify-between items-center px-margin py-1 w-full font-code-snippet text-[10px] text-outline/70 shrink-0 z-30">
+<div class="flex items-center gap-4">
+<span class="font-label-caps text-[10px] text-primary-fixed-dim flex items-center gap-1">
+<span class="w-1.5 h-1.5 bg-primary-fixed-dim flicker"></span>
+                    SYS_STATUS: OPERATIONAL
+                </span>
+<span class="opacity-20">|</span>
+<span>DISK_USAGE: 42%</span>
+<span class="opacity-20">|</span>
+<a class="hover:text-on-surface transition-colors" href="#">repo:main</a>
+</div>
+<div class="flex items-center gap-4">
+<span class="hidden md:inline">CPU_LOAD: 12%</span>
+<span class="hidden md:inline opacity-20">|</span>
+<span class="hidden md:inline">UPTIME: 14d 02h</span>
+<span class="hidden md:inline opacity-20">|</span>
+<span class="text-primary-fixed-dim flicker">last_upd:1715892000</span>
+</div>
+</footer>
+</div>
+<!-- Floating Action Button -->
+<button class="fixed bottom-10 right-8 w-12 h-12 bg-primary-container text-on-primary-fixed rounded-none border border-primary-fixed shadow-[0_0_20px_rgba(0,255,65,0.3)] flex items-center justify-center hover:scale-105 active:scale-95 transition-all z-50 group">
+<span class="material-symbols-outlined text-[28px] flicker" data-icon="add">add</span>
+<span class="absolute right-14 bg-surface-container-highest text-on-surface px-2 py-1 text-[10px] border border-outline-variant opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">MKDIR_WORKFLOW</span>
+</button>
+<script>
+        // --- Interactive Dot Grid Canvas Logic ---
+        const canvas = document.getElementById('dot-canvas');
+        const ctx = canvas.getContext('2d');
+        let dots = [];
+        const spacing = 32;
+        let mouse = { x: null, y: null };
+
+        function initCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            dots = [];
+            for (let x = 0; x < canvas.width; x += spacing) {
+                for (let y = 0; y < canvas.height; y += spacing) {
+                    dots.push({ x, y, baseAlpha: 0.05 });
+                }
+            }
+        }
+
+        function drawDots() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            dots.forEach(dot => {
+                let distance = 0;
+                if (mouse.x !== null) {
+                    const dx = mouse.x - dot.x;
+                    const dy = mouse.y - dot.y;
+                    distance = Math.sqrt(dx * dx + dy * dy);
+                }
+
+                // Interaction effect
+                const radius = 150;
+                let opacity = dot.baseAlpha;
+                let size = 1;
+
+                if (distance < radius) {
+                    const factor = 1 - (distance / radius);
+                    opacity = dot.baseAlpha + (factor * 0.3);
+                    size = 1 + (factor * 1.5);
+                }
+
+                ctx.fillStyle = `rgba(0, 255, 65, ${opacity})`;
+                ctx.beginPath();
+                ctx.arc(dot.x, dot.y, size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            requestAnimationFrame(drawDots);
+        }
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        window.addEventListener('resize', initCanvas);
+        initCanvas();
+        drawDots();
+
+        // --- Filtering Logic (cd /category metaphor) ---
+        function filterCategory(category) {
+            const groups = document.querySelectorAll('.workflow-group');
+            const navItems = document.querySelectorAll('.category-item');
+            const pathDisplay = document.getElementById('current-path');
+            const lsCommand = document.getElementById('ls-command');
+
+            // Update Path UI
+            if (category === 'ALL') {
+                pathDisplay.textContent = 'cd /workflows';
+                lsCommand.textContent = 'ls -la /workflows';
+            } else {
+                const lowerCat = category.toLowerCase();
+                pathDisplay.textContent = `cd /workflows/${lowerCat}`;
+                lsCommand.textContent = `ls -la /workflows/${lowerCat}`;
+            }
+
+            // Update Sidebar State
+            navItems.forEach(item => {
+                if (item.getAttribute('data-category') === category) {
+                    item.classList.add('active', 'text-on-primary-fixed');
+                    item.classList.remove('text-on-secondary-container');
+                    item.querySelector('.active-indicator').classList.remove('hidden');
+                } else {
+                    item.classList.remove('active', 'text-on-primary-fixed');
+                    item.classList.add('text-on-secondary-container');
+                    item.querySelector('.active-indicator').classList.add('hidden');
+                }
+            });
+
+            // Filter main view content
+            groups.forEach(group => {
+                if (category === 'ALL' || group.getAttribute('data-group') === category) {
+                    group.classList.remove('hidden');
+                    group.style.opacity = '1';
+                    group.style.transform = 'translateY(0)';
+                } else {
+                    group.classList.add('hidden');
+                    group.style.opacity = '0';
+                    group.style.transform = 'translateY(10px)';
+                }
+            });
+        }
+
+        // Micro-interactions for terminal feel
+        document.querySelectorAll('.cli-input').forEach(input => {
+            input.addEventListener('focus', () => {
+                input.closest('div').classList.add('border-primary-fixed-dim');
+            });
+            input.addEventListener('blur', () => {
+                input.closest('div').classList.remove('border-primary-fixed-dim');
+            });
+        });
+
+        // Click visual feedback
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('mousedown', () => {
+                btn.style.opacity = '0.6';
+            });
+            btn.addEventListener('mouseup', () => {
+                btn.style.opacity = '1';
+            });
+        });
+    </script>
+</body></html>

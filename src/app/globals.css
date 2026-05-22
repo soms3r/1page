@@ -1,11 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0a0a0a;
-  --foreground: #e0e0e0;
-  --accent: #00ff41;
-  --muted: #666;
-  --border: #333;
+  --background: #0d1117;
+  --foreground: #e6edf3;
+  --accent: #3fb950;
+  --muted: #8b949e;
+  --border: #30363d;
+  --surface: #161b22;
+  --hover: #1c2128;
+  --green-dim: #2ea043;
 }
 
 @theme inline {
@@ -14,7 +17,23 @@
   --color-accent: var(--accent);
   --color-muted: var(--muted);
   --color-border: var(--border);
-  --font-sans: "Courier New", "Fira Code", monospace;
+  --font-sans: "JetBrains Mono", "Fira Code", "Cascadia Code", monospace;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("https://fonts.cdnfonts.com/s/29692/JetBrainsMono-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("https://fonts.cdnfonts.com/s/29692/JetBrainsMono-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
 }
 
 * {
@@ -24,11 +43,12 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: "Courier New", "Fira Code", monospace;
+  font-family: "JetBrains Mono", "Fira Code", "Cascadia Code", monospace;
   font-size: 14px;
   line-height: 1.6;
   margin: 0;
   padding: 0;
+  -webkit-font-smoothing: antialiased;
 }
 
 a {
@@ -42,14 +62,14 @@ a:hover {
 input,
 textarea,
 select {
-  background: #111;
+  background: var(--surface);
   color: var(--foreground);
   border: 1px solid var(--border);
-  font-family: "Courier New", monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 13px;
   padding: 8px 12px;
   outline: none;
-  border-radius: 0;
+  border-radius: 6px;
 }
 input:focus,
 textarea:focus,
@@ -62,12 +82,13 @@ button {
   background: var(--accent);
   color: #000;
   border: none;
-  font-family: "Courier New", monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 13px;
   padding: 8px 16px;
   cursor: pointer;
-  font-weight: bold;
-  border-radius: 0;
+  font-weight: 500;
+  border-radius: 6px;
+  transition: opacity 0.15s;
 }
 button:hover {
   opacity: 0.9;
@@ -78,7 +99,7 @@ button:disabled {
 }
 
 pre {
-  font-family: "Courier New", monospace;
+  font-family: "JetBrains Mono", monospace;
 }
 
 ::selection {
@@ -87,14 +108,24 @@ pre {
 }
 
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #111;
+  background: var(--background);
 }
 ::-webkit-scrollbar-thumb {
-  background: #333;
+  background: var(--border);
+  border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: var(--muted);
+}
+
+.file-icon::before {
+  content: "📄 ";
+  font-size: 12px;
+}
+.folder-icon::before {
+  content: "📁 ";
+  font-size: 12px;
 }

@@ -1,315 +1,321 @@
 "use client";
 
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { trackPageView } from "@/lib/analytics";
-import type { WorkflowMeta } from "@/lib/workflows";
 import { loadSearchIndex, searchWorkflows } from "@/lib/search";
+import type { WorkflowMeta } from "@/lib/workflows";
+import { trackPageView } from "@/lib/analytics";
 
-const BOOT_LINES = [
-  "> 1 Page Terminal v0.1.0",
-  "> AI is Easy.",
-  "> Loading workflow index...",
-  "> System ready. Type 'help' for commands.",
-  "",
-];
+type Stats = {
+  total: number;
+  categories: number;
+  tags: number;
+  models: number;
+};
+
+function computeRelated(w: WorkflowMeta[], slug: string): WorkflowMeta[] {
+  const current = w.find((x) => x.slug === slug);
+  if (!current) return [];
+  return w
+    .filter((x) => x.slug !== slug && x.category === current.category)
+    .slice(0, 3);
+}
 
 export default function HomePage() {
-  const [booted, setBooted] = useState(false);
-  const [input, setInput] = useState("");
-  const [results, setResults] = useState<WorkflowMeta[]>([]);
+  const [stats, setStats] = useState<Stats>({ total: 0, categories: 0, tags: 0, models: 0 });
   const [featured, setFeatured] = useState<WorkflowMeta[]>([]);
   const [latest, setLatest] = useState<WorkflowMeta[]>([]);
+  const [trending, setTrending] = useState<WorkflowMeta[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
-  const [stats, setStats] = useState({ total: 0, categories: 0 });
-  const [mode, setMode] = useState<"home" | "search" | "category">("home");
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const init = useCallback(async () => {
-    await loadSearchIndex();
-    try {
-      const [indexRes, catRes] = await Promise.all([
-        fetch("/content/index.json"),
-        fetch("/content/categories.json"),
-      ]);
-      const index: WorkflowMeta[] = await indexRes.json();
-      const cats: string[] = await catRes.json();
-      setFeatured(index.filter((w) => w.featured));
-      setLatest(
-        [...index]
-          .sort((a, b) => new Date(b.updated).getTime() - new Date(a.updated).getTime())
-          .slice(0, 5)
-      );
-      setCategories(cats);
-      setStats({ total: index.length, categories: cats.length });
-    } catch {
-      // not built yet
-    }
-  }, []);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<WorkflowMeta[]>([]);
+  const [showSearch, setShowSearch] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     trackPageView();
-    const t = setTimeout(() => {
-      setBooted(true);
-      init();
-    }, 800);
-    return () => clearTimeout(t);
-  }, [init]);
+    async function init() {
+      await loadSearchIndex();
+      try {
+        const [indexRes, catsRes, statsRes] = await Promise.all([
+          fetch("/workflows-index.json"),
+          fetch("/categories.json"),
+          fetch("/stats.json"),
+        ]);
+        const index: WorkflowMeta[] = await indexRes.json();
+        const cats: string[] = await catsRes.json();
+        const st: Stats = await statsRes.json();
+
+        setStats(st);
+        setCategories(cats);
+        setFeatured(index.filter((w) => w.featured));
+        setLatest(
+          [...index]
+            .sort((a, b) => new Date(b.updated).getTime() - new Date(a.updated).getTime())
+            .slice(0, 5)
+        );
+        const ranked = [...index]
+          .sort((a, b) => {
+            if (a.featured !== b.featured) return a.featured ? -1 : 1;
+            return (b.refCount || 0) - (a.refCount || 0);
+          })
+          .slice(0, 5);
+        setTrending(ranked);
+        setLoaded(true);
+      } catch {
+        // not built yet
+      }
+    }
+    init();
+  }, []);
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
-      if (!booted) return;
-      if (e.key === "/" && document.activeElement !== inputRef.current) {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
-        inputRef.current?.focus();
+        setShowSearch(true);
       }
       if (e.key === "Escape") {
-        setInput("");
-        setResults([]);
-        setMode("home");
-        inputRef.current?.blur();
+        setShowSearch(false);
+        setSearchQuery("");
+        setSearchResults([]);
       }
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [booted]);
+  }, []);
 
-  useEffect(() => {
-    if (!booted) return;
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => {
-      const cmd = input.trim();
-      if (!cmd) {
-        if (mode !== "home") {
-          setMode("home");
-          setResults([]);
-        }
-        return;
-      }
-      const found = searchWorkflows(cmd);
-      setResults(found);
-      setMode(found.length > 0 || cmd.length >= 2 ? "search" : "home");
-    }, 200);
-    return () => {
-      if (debounceRef.current) clearTimeout(debounceRef.current);
-    };
-  }, [input, booted, mode]);
-
-  const handleCommand = useCallback(
-    (e: React.FormEvent) => {
-      e.preventDefault();
-      const cmd = input.trim().toLowerCase();
-
-      if (cmd === "help") {
-        setResults([]);
-        setMode("home");
-        setInput("");
-        return;
-      }
-
-      if (cmd === "clear") {
-        setInput("");
-        setResults([]);
-        setMode("home");
-        return;
-      }
-
-      if (cmd === "featured" || cmd === "top") {
-        setResults(featured);
-        setMode("search");
-        setInput("");
-        return;
-      }
-
-      if (cmd === "categories" || cmd === "cat") {
-        setMode("category");
-        setResults([]);
-        setInput("");
-        return;
-      }
-
-      if (cmd.startsWith("open ")) {
-        const slug = cmd.slice(5).trim();
-        if (slug) {
-          window.location.href = `/workflows/${slug}`;
-        }
-        return;
-      }
-
-      if (cmd.startsWith("cat ") && !cmd.startsWith("cat")) {
-        const cat = cmd.slice(4).trim();
-        if (categories.includes(cat)) {
-          setSelectedCategory(cat);
-          setMode("category");
-          setResults([]);
-          setInput("");
-          return;
-        }
-      }
-    },
-    [input, featured, categories]
-  );
-
-  const handleCategoryClick = (cat: string) => {
-    setSelectedCategory(cat);
-    setMode("category");
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      const results = searchWorkflows(searchQuery.trim());
+      setSearchResults(results);
+    }
   };
 
-  const hasActiveSearch = mode === "search" && results.length > 0;
-
-  if (!booted) {
-    return (
-      <div className="space-y-1">
-        {BOOT_LINES.map((line, i) => (
-          <div key={i} className="text-[var(--accent)]">{line}</div>
-        ))}
-      </div>
-    );
-  }
+  const dirCategories = [
+    "marketing", "design", "development", "research",
+    "business", "education", "writing", "productivity",
+  ];
 
   return (
-    <div className="space-y-6">
-      <div className="text-xs text-[var(--muted)]">
-        <span className="text-[var(--accent)] font-bold">1 Page</span> — AI is Easy
-        <span className="ml-2">| {stats.total} workflows · {stats.categories} categories</span>
-      </div>
+    <div className="space-y-12">
 
-      <form onSubmit={handleCommand} className="flex gap-2 items-center">
-        <span className="text-[var(--accent)] font-bold">$</span>
-        <input
-          ref={inputRef}
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="type to search workflows..."
-          className="flex-1 bg-transparent border-0 border-b border-[var(--border)] focus:border-[var(--accent)] outline-none px-2 py-1 text-sm"
-          autoFocus
-          spellCheck={false}
-          autoComplete="off"
-        />
-      </form>
-
-      <div className="text-xs text-[var(--muted)] space-x-4">
-        <span>type to search</span>
-        <span>open &lt;slug&gt;</span>
-        <span>featured</span>
-        <span>categories</span>
-        <span>clear</span>
-        <span className="text-[var(--border)]">[ / to focus · Esc to clear ]</span>
-      </div>
-
-      {hasActiveSearch && (
-        <div className="space-y-1">
-          <div className="text-[var(--muted)] text-xs">
-            {results.length} result(s) for &quot;{input}&quot;
+      {/* Hero */}
+      <section className="text-center space-y-6 py-8">
+        <h1 className="text-5xl sm:text-6xl font-bold tracking-tight">
+          <span className="text-[var(--accent)]">1</span>{" "}
+          <span className="text-[var(--foreground)]">Page</span>
+        </h1>
+        <p className="text-xl text-[var(--muted)]">AI is Easy</p>
+        <p className="text-sm text-[var(--muted)] max-w-lg mx-auto">
+          Discover, copy and run AI workflows.
+        </p>
+        {loaded && (
+          <div className="flex items-center justify-center gap-4 text-xs text-[var(--muted)]">
+            <span className="text-[var(--accent)]">{stats.total.toLocaleString()}+</span> workflows
+            <span className="text-[var(--accent)]">{stats.categories}</span> categories
+            <span>Community maintained</span>
+            <span>Open source</span>
           </div>
-          {results.slice(0, 20).map((w) => (
-            <Link
-              key={w.slug}
-              href={`/workflows/${w.slug}`}
-              prefetch={false}
-              className="block pl-4 py-0.5 text-[var(--accent)] hover:underline"
-            >
-              &gt; {w.slug} <span className="text-[var(--muted)]">— {w.description}</span>
-            </Link>
-          ))}
-          {results.length > 20 && (
-            <div className="pl-4 text-xs text-[var(--muted)]">... and {results.length - 20} more</div>
-          )}
-          <Link
-            href={`/search?q=${encodeURIComponent(input)}`}
-            className="block pl-4 text-xs text-[var(--accent)] hover:underline mt-1"
-          >
-            Advanced search →
-          </Link>
-        </div>
-      )}
-
-      {mode === "search" && results.length === 0 && input.trim().length >= 2 && (
-        <div className="text-[var(--muted)] text-xs">No results for &quot;{input}&quot;.</div>
-      )}
-
-      {mode === "category" && (
-        <div className="space-y-2">
-          <div className="text-xs text-[var(--muted)]">
-            {selectedCategory ? `Category: ${selectedCategory}` : "All Categories"}
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => handleCategoryClick(cat)}
-                className={`text-left px-3 py-2 border text-sm ${
-                  selectedCategory === cat
-                    ? "border-[var(--accent)] text-[var(--accent)]"
-                    : "border-[var(--border)] text-[var(--foreground)]"
-                } bg-transparent`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {mode === "home" && !input.trim() && featured.length > 0 && (
-        <div className="space-y-2">
-          <div className="text-xs text-[var(--muted)]">Featured Workflows:</div>
-          {featured.map((w) => (
-            <Link
-              key={w.slug}
-              href={`/workflows/${w.slug}`}
-              prefetch={false}
-              className="block pl-4 py-0.5 text-[var(--accent)] hover:underline"
-            >
-              &gt; {w.slug} <span className="text-[var(--muted)]">— {w.description}</span>
-            </Link>
-          ))}
-        </div>
-      )}
-
-      {mode === "home" && !input.trim() && latest.length > 0 && (
-        <div className="space-y-2">
-          <div className="text-xs text-[var(--muted)]">Latest Workflows:</div>
-          {latest.map((w) => (
-            <Link
-              key={w.slug}
-              href={`/workflows/${w.slug}`}
-              prefetch={false}
-              className="block pl-4 py-0.5 text-[var(--foreground)] hover:text-[var(--accent)]"
-            >
-              &gt; {w.title} <span className="text-[var(--muted)]">— {w.updated}</span>
-            </Link>
-          ))}
-        </div>
-      )}
-
-      {mode === "home" && !input.trim() && categories.length > 0 && (
-        <div className="space-y-2">
-          <div className="text-xs text-[var(--muted)]">Categories:</div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
-            {categories.map((cat) => (
+        )}
+        <div className="max-w-md mx-auto">
+          <form onSubmit={handleSearch} className="relative">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onFocus={() => setShowSearch(true)}
+              placeholder="Search workflows..."
+              className="w-full pl-4 pr-10 py-3 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-sm focus:border-[var(--accent)]"
+            />
+            <kbd className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-[var(--muted)] border border-[var(--border)] px-1.5 py-0.5 rounded">
+              ⌘K
+            </kbd>
+          </form>
+          <div className="flex flex-wrap justify-center gap-2 mt-3">
+            {["marketing", "chatgpt", "claude", "automation", "writing", "coding"].map((tag) => (
               <Link
-                key={cat}
-                href={`/search?category=${cat}`}
-                className="block px-3 py-2 border border-[var(--border)] text-sm hover:border-[var(--accent)]"
+                key={tag}
+                href={`/tag/${tag}`}
+                className="text-xs text-[var(--muted)] hover:text-[var(--accent)] px-2 py-1 border border-[var(--border)] rounded hover:border-[var(--accent)]"
               >
-                {cat}
+                #{tag}
               </Link>
             ))}
           </div>
         </div>
+      </section>
+
+      {/* Search Results */}
+      {showSearch && searchResults.length > 0 && (
+        <section className="space-y-2 border border-[var(--border)] rounded-lg p-4 bg-[var(--surface)]">
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-[var(--muted)]">{searchResults.length} results</span>
+            <button
+              onClick={() => { setShowSearch(false); setSearchQuery(""); setSearchResults([]); }}
+              className="text-xs text-[var(--muted)] bg-transparent border border-[var(--border)] px-2 py-1 rounded"
+            >
+              Close
+            </button>
+          </div>
+          <div className="divide-y divide-[var(--border)]">
+            {searchResults.slice(0, 10).map((w) => (
+              <Link
+                key={w.slug}
+                href={`/workflows/${w.slug}`}
+                className="flex items-center gap-3 py-2 px-2 hover:bg-[var(--hover)] rounded group"
+              >
+                <span className="text-[var(--muted)] text-xs">file:</span>
+                <span className="text-[var(--accent)] text-sm">{w.slug}.md</span>
+                <span className="text-[var(--muted)] text-xs hidden sm:block truncate flex-1">{w.description}</span>
+                <span className="text-[10px] text-[var(--muted)] border border-[var(--border)] px-1.5 py-0.5 rounded">{w.category}</span>
+              </Link>
+            ))}
+          </div>
+          {searchResults.length > 10 && (
+            <Link href={`/search?q=${encodeURIComponent(searchQuery)}`} className="block text-xs text-[var(--accent)] text-center pt-2">
+              View all {searchResults.length} results →
+            </Link>
+          )}
+        </section>
       )}
 
-      {mode === "home" && !input.trim() && (
-        <div className="flex gap-4 text-xs text-[var(--muted)] pt-2 border-t border-[var(--border)]">
-          <Link href="/search" className="text-[var(--accent)]">Advanced Search →</Link>
-          <Link href="/generate" prefetch={false} className="text-[var(--accent)]">Generate with AI →</Link>
-          <Link href="/submit" className="text-[var(--accent)]">Submit Workflow →</Link>
+      {/* Trending */}
+      {trending.length > 0 && (
+        <section className="space-y-3">
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-[var(--muted)] font-medium tracking-wide uppercase">Trending</span>
+            <div className="h-px flex-1 bg-[var(--border)]" />
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {trending.map((w) => (
+              <WorkflowCard key={w.slug} workflow={w} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Featured */}
+      {featured.length > 0 && (
+        <section className="space-y-3">
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-[var(--muted)] font-medium tracking-wide uppercase">Featured</span>
+            <div className="h-px flex-1 bg-[var(--border)]" />
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {featured.map((w) => (
+              <WorkflowCard key={w.slug} workflow={w} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Latest */}
+      {latest.length > 0 && (
+        <section className="space-y-3">
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-[var(--muted)] font-medium tracking-wide uppercase">Latest</span>
+            <div className="h-px flex-1 bg-[var(--border)]" />
+          </div>
+          <div className="space-y-1">
+            {latest.map((w) => (
+              <Link
+                key={w.slug}
+                href={`/workflows/${w.slug}`}
+                className="flex items-center gap-3 py-1.5 px-2 hover:bg-[var(--hover)] rounded group"
+              >
+                <span className="text-[var(--muted)] text-xs">file:</span>
+                <span className="text-[var(--accent)] text-sm">{w.slug}.md</span>
+                <span className="text-[var(--muted)] text-xs truncate flex-1">{w.description}</span>
+                <span className="text-[10px] text-[var(--muted)]">{w.updated}</span>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Browse Directories */}
+      <section className="space-y-3">
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-[var(--muted)] font-medium tracking-wide uppercase">Browse Directories</span>
+          <div className="h-px flex-1 bg-[var(--border)]" />
         </div>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          {dirCategories.map((cat) => (
+            <Link
+              key={cat}
+              href={`/category/${cat}`}
+              className="flex items-center gap-2 px-3 py-2.5 border border-[var(--border)] rounded-lg hover:border-[var(--accent)] hover:bg-[var(--hover)] text-sm"
+            >
+              <span className="text-[var(--muted)]">/</span>
+              <span>{cat}</span>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* Stats Bar */}
+      {loaded && (
+        <section className="border border-[var(--border)] rounded-lg p-4 bg-[var(--surface)]">
+          <div className="grid grid-cols-4 gap-4 text-center">
+            <div>
+              <div className="text-lg font-bold text-[var(--accent)]">{stats.total}</div>
+              <div className="text-[10px] text-[var(--muted)] uppercase tracking-wider">Workflows</div>
+            </div>
+            <div>
+              <div className="text-lg font-bold text-[var(--accent)]">{stats.categories}</div>
+              <div className="text-[10px] text-[var(--muted)] uppercase tracking-wider">Categories</div>
+            </div>
+            <div>
+              <div className="text-lg font-bold text-[var(--accent)]">{stats.tags}</div>
+              <div className="text-[10px] text-[var(--muted)] uppercase tracking-wider">Tags</div>
+            </div>
+            <div>
+              <div className="text-lg font-bold text-[var(--accent)]">{stats.models}</div>
+              <div className="text-[10px] text-[var(--muted)] uppercase tracking-wider">Models</div>
+            </div>
+          </div>
+        </section>
       )}
     </div>
+  );
+}
+
+function WorkflowCard({ workflow }: { workflow: WorkflowMeta }) {
+  const daysAgo = Math.floor(
+    (Date.now() - new Date(workflow.updated).getTime()) / (1000 * 60 * 60 * 24)
+  );
+  return (
+    <Link
+      href={`/workflows/${workflow.slug}`}
+      className="block border border-[var(--border)] rounded-lg p-3 hover:border-[var(--accent)] hover:bg-[var(--hover)] group"
+    >
+      <div className="flex items-start justify-between gap-2">
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-2">
+            <span className="text-[var(--muted)] text-xs">file:</span>
+            <span className="text-[var(--accent)] text-sm font-medium truncate">{workflow.slug}.md</span>
+          </div>
+          <p className="text-xs text-[var(--muted)] mt-1 line-clamp-2">{workflow.description}</p>
+          <div className="flex items-center gap-2 mt-2">
+            <span className="text-[10px] border border-[var(--border)] px-1.5 py-0.5 rounded text-[var(--muted)]">
+              {workflow.category}
+            </span>
+            {workflow.models.best && (
+              <span className="text-[10px] text-[var(--muted)]">{workflow.models.best}</span>
+            )}
+            <span className="text-[10px] text-[var(--muted)]">{daysAgo > 0 ? `${daysAgo}d ago` : "today"}</span>
+          </div>
+        </div>
+      </div>
+      {workflow.tags.length > 0 && (
+        <div className="flex flex-wrap gap-1 mt-2">
+          {workflow.tags.slice(0, 3).map((tag) => (
+            <span key={tag} className="text-[10px] text-[var(--muted)]">#{tag}</span>
+          ))}
+        </div>
+      )}
+    </Link>
   );
 }

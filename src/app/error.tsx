@@ -8,14 +8,14 @@ export default function ErrorPage({
   reset: () => void;
 }) {
   return (
-    <div className="space-y-4">
-      <div className="text-lg font-bold text-red-400">$ error</div>
+    <div className="flex flex-col items-center justify-center py-16 space-y-4">
+      <div className="text-4xl font-bold text-red-400">500</div>
       <div className="text-sm text-[var(--muted)]">
         Something went wrong. {error.message}
       </div>
       <button
         onClick={() => reset()}
-        className="text-xs border border-[var(--accent)] bg-transparent text-[var(--accent)]"
+        className="text-sm border border-[var(--accent)] bg-transparent text-[var(--accent)] px-4 py-2 rounded"
       >
         Try again
       </button>

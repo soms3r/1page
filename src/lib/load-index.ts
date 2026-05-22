@@ -1,13 +1,11 @@
 import fs from "fs";
 import path from "path";
-import type { WorkflowMeta } from "./workflows";
+import type { WorkflowMeta, Workflow } from "./workflows";
 
-const INDEX_PATH = path.join(process.cwd(), "public", "workflows-index.json");
-const SEO_INDEX_PATH = path.join(process.cwd(), "content", "seo-index.json");
-const EXPANDED_DIR = path.join(process.cwd(), "content", "expanded");
+const PUBLIC_DIR = path.join(process.cwd(), "public");
 
-let cached: WorkflowMeta[] | null = null;
-let seoCached: SEOEntry[] | null = null;
+let cachedIndex: WorkflowMeta[] | null = null;
+let cachedSEO: SEOEntry[] | null = null;
 
 export type SEOEntry = {
   slug: string;
@@ -30,22 +28,47 @@ export type ExpandedContent = {
   commonMistakes: string[];
 };
 
+export type WorkflowContent = {
+  slug: string;
+  title: string;
+  body: string;
+  variables: { name: string; label: string; required: boolean; placeholder: string }[] | null;
+};
+
 export function loadWorkflowIndex(): WorkflowMeta[] {
-  if (cached) return cached;
-  if (!fs.existsSync(INDEX_PATH)) return [];
-  cached = JSON.parse(fs.readFileSync(INDEX_PATH, "utf-8")) as WorkflowMeta[];
-  return cached;
+  if (cachedIndex) return cachedIndex;
+  const p = path.join(PUBLIC_DIR, "workflows-index.json");
+  if (!fs.existsSync(p)) return [];
+  cachedIndex = JSON.parse(fs.readFileSync(p, "utf-8")) as WorkflowMeta[];
+  return cachedIndex;
 }
 
 export function loadSEOIndex(): SEOEntry[] {
-  if (seoCached) return seoCached;
-  if (!fs.existsSync(SEO_INDEX_PATH)) return [];
-  seoCached = JSON.parse(fs.readFileSync(SEO_INDEX_PATH, "utf-8")) as SEOEntry[];
-  return seoCached;
+  if (cachedSEO) return cachedSEO;
+  const p = path.join(PUBLIC_DIR, "seo-index.json");
+  if (!fs.existsSync(p)) return [];
+  cachedSEO = JSON.parse(fs.readFileSync(p, "utf-8")) as SEOEntry[];
+  return cachedSEO;
+}
+
+export function loadWorkflowContent(slug: string): Workflow | null {
+  const p = path.join(PUBLIC_DIR, "workflow-content", `${slug}.json`);
+  if (!fs.existsSync(p)) return null;
+  const data = JSON.parse(fs.readFileSync(p, "utf-8")) as WorkflowContent;
+
+  const index = loadWorkflowIndex();
+  const meta = index.find((w) => w.slug === slug);
+  if (!meta) return null;
+
+  return {
+    ...meta,
+    body: data.body,
+    variables: data.variables || undefined,
+  };
 }
 
 export function loadExpandedContent(slug: string): ExpandedContent | null {
-  const p = path.join(EXPANDED_DIR, `${slug}.json`);
+  const p = path.join(PUBLIC_DIR, "expanded", `${slug}.json`);
   if (!fs.existsSync(p)) return null;
   return JSON.parse(fs.readFileSync(p, "utf-8")) as ExpandedContent;
 }
@@ -79,4 +102,10 @@ export function loadModels(): string[] {
     for (const l of w.models.limited) models.add(l);
   }
   return [...models].sort();
+}
+
+export function loadStats(): { total: number; categories: number; tags: number; models: number } | null {
+  const p = path.join(PUBLIC_DIR, "stats.json");
+  if (!fs.existsSync(p)) return null;
+  return JSON.parse(fs.readFileSync(p, "utf-8"));
 }

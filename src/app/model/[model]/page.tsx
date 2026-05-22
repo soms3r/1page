@@ -14,27 +14,6 @@ function matchesModel(model: string, w: { models: { best: string; good: string[]
   );
 }
 
-function getRelatedSearches(model: string): string[] {
-  const seo = loadSEOIndex();
-  const index = loadWorkflowIndex();
-  const slugs = new Set(index.filter((w) => matchesModel(model, w)).map((w) => w.slug));
-  const searches: string[] = [];
-  for (const entry of seo) {
-    if (slugs.has(entry.slug)) {
-      for (const kw of entry.keywords) {
-        searches.push(kw);
-        if (searches.length >= 6) break;
-      }
-      for (const q of entry.relatedQueries) {
-        searches.push(q);
-        if (searches.length >= 6) break;
-      }
-    }
-    if (searches.length >= 6) break;
-  }
-  return searches.slice(0, 6);
-}
-
 export async function generateStaticParams() {
   const models = loadModels();
   return models.map((model) => ({ model }));
@@ -62,59 +41,66 @@ export default async function ModelPage({ params }: Props) {
   const { model } = await params;
   const index = loadWorkflowIndex();
   const workflows = index.filter((w) => matchesModel(model, w));
-
   if (workflows.length === 0) notFound();
 
-  const relatedSearches = getRelatedSearches(model);
+  const seo = loadSEOIndex();
+  const slugs = new Set(workflows.map((w) => w.slug));
+  const relatedSearches: string[] = [];
+  for (const entry of seo) {
+    if (slugs.has(entry.slug)) {
+      for (const kw of entry.keywords) { relatedSearches.push(kw); if (relatedSearches.length >= 6) break; }
+      for (const q of entry.relatedQueries) { relatedSearches.push(q); if (relatedSearches.length >= 6) break; }
+    }
+    if (relatedSearches.length >= 6) break;
+  }
 
   return (
     <div className="space-y-6">
-      <Link href="/" className="text-[var(--accent)] text-sm">&lt; Back</Link>
+      <div className="flex items-center gap-2 text-xs text-[var(--muted)]">
+        <Link href="/" className="text-[var(--accent)] hover:underline">/</Link>
+        <span className="text-[var(--foreground)]">model</span>
+        <span className="text-[var(--muted)]">/</span>
+        <span className="text-[var(--accent)]">{model}</span>
+      </div>
 
-      <div className="text-lg font-bold text-[var(--accent)]">$ model: {model}</div>
-      <p className="text-sm text-[var(--muted)]">{workflows.length} workflow{workflows.length !== 1 ? "s" : ""}</p>
+      <div>
+        <h1 className="text-xl font-bold text-[var(--accent)]">{model}</h1>
+        <p className="text-sm text-[var(--muted)] mt-1">{workflows.length} workflow{workflows.length !== 1 ? "s" : ""}</p>
+      </div>
 
       <div className="space-y-1">
         {workflows.map((w) => (
           <Link
             key={w.slug}
             href={`/workflows/${w.slug}`}
-            className="block pl-4 py-1.5 border-l-2 border-[var(--border)] hover:border-[var(--accent)] hover:bg-[#111]"
+            className="flex items-center gap-3 py-2 px-3 hover:bg-[var(--hover)] rounded-lg group border-b border-[var(--border)] last:border-0"
           >
-            <span className="text-[var(--accent)]">&gt; {w.title}</span>
-            <span className="text-xs text-[var(--muted)] ml-2">[{w.category}]</span>
-            <span className="block text-xs text-[var(--muted)] mt-0.5">{w.description}</span>
+            <span className="text-[var(--muted)] text-xs">file:</span>
+            <span className="text-[var(--accent)] text-sm font-medium">{w.slug}.md</span>
+            <span className="text-[10px] text-[var(--muted)] border border-[var(--border)] px-1.5 py-0.5 rounded">[{w.category}]</span>
+            <span className="text-xs text-[var(--muted)] hidden sm:block truncate flex-1">{w.description}</span>
           </Link>
         ))}
       </div>
 
       {relatedSearches.length > 0 && (
-        <div className="space-y-2">
-          <div className="text-xs text-[var(--muted)]">Related searches:</div>
+        <div className="space-y-2 pt-4">
+          <div className="text-xs text-[var(--muted)] uppercase tracking-wider">Related searches</div>
           <div className="flex flex-wrap gap-2">
-            {relatedSearches.map((s) => {
-              const slug = keywordToSlug(s);
-              return (
-                <Link
-                  key={slug}
-                  href={`/search/${slug}`}
-                  className="text-xs border border-[var(--border)] px-2 py-1 hover:border-[var(--accent)]"
-                >
-                  {s}
-                </Link>
-              );
-            })}
+            {relatedSearches.map((s) => (
+              <Link key={keywordToSlug(s)} href={`/search/${keywordToSlug(s)}`}
+                className="text-xs border border-[var(--border)] px-2 py-1 rounded hover:border-[var(--accent)]"
+              >{s}</Link>
+            ))}
           </div>
         </div>
       )}
 
-      <div className="flex gap-3 text-xs text-[var(--muted)]">
-        <Link href="/trending" className="text-[var(--accent)]">Trending →</Link>
-        <Link href="/featured" className="text-[var(--accent)]">Featured →</Link>
-        <Link href="/new" className="text-[var(--accent)]">Latest →</Link>
+      <div className="flex gap-3 text-xs text-[var(--muted)] pt-2">
+        <Link href="/trending" className="text-[var(--accent)] hover:underline">Trending →</Link>
+        <Link href="/featured" className="text-[var(--accent)] hover:underline">Featured →</Link>
+        <Link href="/search" className="text-[var(--accent)] hover:underline">Search →</Link>
       </div>
-
-      <Link href="/search" className="text-[var(--accent)] text-sm">Advanced Search →</Link>
     </div>
   );
 }

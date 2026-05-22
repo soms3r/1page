@@ -1,13 +1,51 @@
 import fs from "fs";
 import path from "path";
-import { getAllWorkflows } from "../lib/workflows";
+import matter from "gray-matter";
 import type { WorkflowMeta } from "../lib/workflows";
 
-const EXPANDED_DIR = path.join(process.cwd(), "content", "expanded");
+const WORKFLOWS_DIR = path.join(process.cwd(), "content", "workflows");
+const EXPANDED_DIR = path.join(process.cwd(), "public", "expanded");
 
-type Section = string[];
+function getAllWorkflows(): WorkflowMeta[] {
+  if (!fs.existsSync(WORKFLOWS_DIR)) return [];
+  const categories = fs.readdirSync(WORKFLOWS_DIR);
+  const workflows: WorkflowMeta[] = [];
 
-function buildHowToUse(w: WorkflowMeta): Section {
+  for (const category of categories) {
+    const categoryPath = path.join(WORKFLOWS_DIR, category);
+    if (!fs.statSync(categoryPath).isDirectory()) continue;
+    const files = fs.readdirSync(categoryPath).filter((f) => f.endsWith(".md"));
+    for (const file of files) {
+      try {
+        const content = fs.readFileSync(path.join(categoryPath, file), "utf-8");
+        const parsed = matter(content);
+        const data = parsed.data as Record<string, unknown>;
+        workflows.push({
+          title: String(data.title || ""),
+          slug: String(data.slug || ""),
+          description: String(data.description || ""),
+          category: String(data.category || ""),
+          tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
+          models: {
+            best: String((data.models as Record<string, unknown>)?.best || ""),
+            good: Array.isArray((data.models as Record<string, unknown>)?.good)
+              ? ((data.models as Record<string, unknown>).good as string[]).map(String) : [],
+            limited: Array.isArray((data.models as Record<string, unknown>)?.limited)
+              ? ((data.models as Record<string, unknown>).limited as string[]).map(String) : [],
+          },
+          updated: String(data.updated || ""),
+          featured: Boolean(data.featured),
+          locked: Boolean(data.locked),
+        });
+      } catch {
+        // skip
+      }
+    }
+  }
+  return workflows;
+}
+
+function buildHowToUse(w: WorkflowMeta): string[] {
   return [
     `Open the ${w.title} workflow in your AI chat interface.`,
     `Replace the variables in [brackets] with your specific inputs.`,
@@ -17,7 +55,7 @@ function buildHowToUse(w: WorkflowMeta): Section {
   ];
 }
 
-function buildBestUseCases(w: WorkflowMeta): Section {
+function buildBestUseCases(w: WorkflowMeta): string[] {
   const cases: string[] = [
     `Quickly generate ${w.category}-specific content with structured prompts.`,
     `Standardize ${w.category} workflows across your team using a shared template.`,
@@ -29,7 +67,7 @@ function buildBestUseCases(w: WorkflowMeta): Section {
   return cases;
 }
 
-function buildExamples(w: WorkflowMeta): Section {
+function buildExamples(w: WorkflowMeta): string[] {
   return [
     `Use ${w.title} to create a ${w.tags[0] || "sample"} project from scratch.`,
     `Adapt ${w.title} for a different ${w.category} domain with custom variables.`,
@@ -39,7 +77,7 @@ function buildExamples(w: WorkflowMeta): Section {
   ];
 }
 
-function buildVariations(w: WorkflowMeta): Section {
+function buildVariations(w: WorkflowMeta): string[] {
   const vars: string[] = [
     `Simplified version: remove optional variables for faster results.`,
     `Advanced version: add custom validation steps after generation.`,
@@ -51,7 +89,7 @@ function buildVariations(w: WorkflowMeta): Section {
   return vars;
 }
 
-function buildCommonMistakes(w: WorkflowMeta): Section {
+function buildCommonMistakes(w: WorkflowMeta): string[] {
   const mistakes: string[] = [
     "Skipping variable customization — always replace [bracketed] placeholders.",
     "Using the wrong AI model tier for complex outputs.",
@@ -68,7 +106,6 @@ function buildCommonMistakes(w: WorkflowMeta): Section {
 
 function build() {
   const workflows = getAllWorkflows();
-
   if (!fs.existsSync(EXPANDED_DIR)) {
     fs.mkdirSync(EXPANDED_DIR, { recursive: true });
   }
@@ -83,14 +120,9 @@ function build() {
       variations: buildVariations(w),
       commonMistakes: buildCommonMistakes(w),
     };
-
-    fs.writeFileSync(
-      path.join(EXPANDED_DIR, `${w.slug}.json`),
-      JSON.stringify(content, null, 2)
-    );
+    fs.writeFileSync(path.join(EXPANDED_DIR, `${w.slug}.json`), JSON.stringify(content, null, 2));
     count++;
   }
-
   console.log(`Content expansion built: ${count} workflows`);
 }
 
