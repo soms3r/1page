@@ -28,11 +28,14 @@ export type ExpandedContent = {
   commonMistakes: string[];
 };
 
+import type { EasyModeConfig } from "./workflows";
+
 export type WorkflowContent = {
   slug: string;
   title: string;
   body: string;
   variables: { name: string; label: string; required: boolean; placeholder: string }[] | null;
+  easyMode: EasyModeConfig | null;
 };
 
 export function loadWorkflowIndex(): WorkflowMeta[] {
@@ -64,6 +67,7 @@ export function loadWorkflowContent(slug: string): Workflow | null {
     ...meta,
     body: data.body,
     variables: data.variables || undefined,
+    easyMode: data.easyMode || undefined,
   };
 }
 
@@ -83,29 +87,41 @@ export function keywordToSlug(kw: string): string {
     .replace(/^-|-$/g, "");
 }
 
+function loadJsonList(filename: string): string[] {
+  const p = path.join(PUBLIC_DIR, filename);
+  if (!fs.existsSync(p)) return [];
+  return JSON.parse(fs.readFileSync(p, "utf-8")) as string[];
+}
+
 export function loadCategories(): string[] {
-  const index = loadWorkflowIndex();
-  return [...new Set(index.map((w) => w.category))].sort();
+  return loadJsonList("categories.json");
 }
 
 export function loadTags(): string[] {
-  const index = loadWorkflowIndex();
-  return [...new Set(index.flatMap((w) => w.tags))].sort();
+  return loadJsonList("tags.json");
 }
 
 export function loadModels(): string[] {
-  const index = loadWorkflowIndex();
-  const models = new Set<string>();
-  for (const w of index) {
-    if (w.models.best) models.add(w.models.best);
-    for (const g of w.models.good) models.add(g);
-    for (const l of w.models.limited) models.add(l);
-  }
-  return [...models].sort();
+  return loadJsonList("models.json");
 }
+
+export type StarterPackEntry = {
+  id: string;
+  title: string;
+  difficulty: "beginner" | "intermediate" | "advanced";
+  remixable: boolean;
+};
+
+export type StarterPacks = Record<string, StarterPackEntry[]>;
 
 export function loadStats(): { total: number; categories: number; tags: number; models: number } | null {
   const p = path.join(PUBLIC_DIR, "stats.json");
   if (!fs.existsSync(p)) return null;
   return JSON.parse(fs.readFileSync(p, "utf-8"));
+}
+
+export function loadStarterPacks(): StarterPacks {
+  const p = path.join(PUBLIC_DIR, "starter-packs.json");
+  if (!fs.existsSync(p)) return {};
+  return JSON.parse(fs.readFileSync(p, "utf-8")) as StarterPacks;
 }

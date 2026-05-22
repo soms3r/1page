@@ -39,6 +39,22 @@ variables:
     label: Target Word Count
     required: false
     placeholder: "e.g. 1500"
+easyMode:
+  enabled: true
+  fields:
+    - name: keyword
+      type: text
+      label: Main Keyword
+      placeholder: "e.g. cloud cost optimization"
+    - name: industry
+      type: text
+      label: Industry
+      placeholder: "e.g. Tech, Health, Finance"
+    - name: region
+      type: text
+      label: Region
+      placeholder: "e.g. US, Global, Europe"
+  template: "You are an SEO content strategist. Write a blog post outline targeting the keyword \"{{keyword}}\" in the {{industry}} industry for a {{region}} audience. Include: H1 with keyword, 3-5 H2 sections, meta description under 160 chars, LSI keywords, and an SEO-friendly URL slug. Use a professional tone."
 ---
 
 You are an SEO content strategist and writer. Write a fully optimized blog post.

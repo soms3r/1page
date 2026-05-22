@@ -1,0 +1,18 @@
+{
+  "githubRepo": "https://github.com/soms3r/1page",
+  "issuesUrl": "https://github.com/soms3r/1page/issues",
+  "discussionsUrl": "https://github.com/soms3r/1page/discussions",
+  "contributingUrl": "https://github.com/soms3r/1page/blob/main/CONTRIBUTING.md",
+  "telegramPromo": {
+    "enabled": false,
+    "title": "Join our Telegram",
+    "message": "Get updates, share workflows, and connect with the community.",
+    "link": "",
+    "linkText": "Join Telegram"
+  },
+  "defaultMessages": {
+    "ctaTitle": "Help grow the community.",
+    "ctaSubtitle": "Star, share, submit, and contribute.",
+    "workflowRequest": "Can't find what you're looking for? Submit a workflow request and help the community grow."
+  }
+}

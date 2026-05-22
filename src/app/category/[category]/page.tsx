@@ -1,7 +1,9 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { loadWorkflowIndex, loadCategories, loadSEOIndex, keywordToSlug } from "@/lib/load-index";
+import { loadWorkflowIndex, loadCategories, loadSEOIndex, keywordToSlug, loadStarterPacks } from "@/lib/load-index";
+import type { StarterPackEntry } from "@/lib/load-index";
+import { loadAllSettings } from "@/lib/settings";
 
 export const dynamicParams = false;
 
@@ -14,17 +16,19 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { category } = await params;
+  const s = loadAllSettings();
+  const suffix = s.seo.titleSuffix || "TLOGZ";
   const index = loadWorkflowIndex();
   const workflows = index.filter((w) => w.category === category);
   const name = category.charAt(0).toUpperCase() + category.slice(1);
   const allTags = [...new Set(workflows.flatMap((w) => w.tags))];
 
   return {
-    title: `${name} Workflows — 1 Page`,
+    title: `${name} Workflows — ${suffix}`,
     description: `Browse ${workflows.length} AI workflow${workflows.length !== 1 ? "s" : ""} in the ${category} category. ${workflows.slice(0, 3).map((w) => w.title).join(", ")}.`,
     keywords: [category, ...allTags, "AI workflows", "prompts"].join(", "),
     openGraph: {
-      title: `${name} Workflows — 1 Page`,
+      title: `${name} Workflows — ${suffix}`,
       description: `Browse ${workflows.length} AI workflow${workflows.length !== 1 ? "s" : ""} in ${category}.`,
       type: "website",
     },
@@ -48,40 +52,66 @@ export default async function CategoryPage({ params }: Props) {
     if (relatedSearches.length >= 6) break;
   }
 
+  const allPacks = loadStarterPacks();
+  const starterPacks: StarterPackEntry[] = allPacks[category] || [];
+
   return (
     <div className="space-y-6">
-      {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-xs text-[var(--muted)]">
-        <Link href="/" className="text-[var(--accent)] hover:underline">/</Link>
-        <span className="text-[var(--foreground)]">content</span>
+        <Link href="/" className="text-[var(--accent)] hover:underline">~</Link>
         <span className="text-[var(--muted)]">/</span>
         <span className="text-[var(--accent)]">{category}</span>
       </div>
 
       <div>
-        <p className="text-xs text-[var(--muted)] mb-1">cd /workflows/{category}</p>
+        <p className="text-xs text-[var(--muted)] mb-1">$ ls workflows/{category}/</p>
         <h1 className="text-xl font-bold text-[var(--accent)]">{category}</h1>
         <p className="text-sm text-[var(--muted)] mt-1">{workflows.length} workflow{workflows.length !== 1 ? "s" : ""}</p>
       </div>
 
-      <div className="space-y-1">
+      {starterPacks.length > 0 && (
+        <div className="space-y-3">
+          <p className="text-xs text-[var(--muted)] uppercase tracking-wider">Starter Pack</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {starterPacks.map((sp) => (
+              <Link
+                key={sp.id}
+                href={`/workflows/${sp.id}`}
+                className="border border-[var(--border)] rounded-lg p-3 hover:border-[var(--accent)] hover:bg-[var(--hover)]"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-[var(--accent)]">{sp.title}</span>
+                  {sp.remixable && <span className="text-[10px] text-[var(--muted)] border border-[var(--border)] px-1.5 py-0.5 rounded">remix</span>}
+                </div>
+                <div className="flex gap-2 mt-1.5">
+                  <span className={`text-[10px] px-1.5 py-0.5 rounded border ${sp.difficulty === "beginner" ? "border-green-600 text-green-400" : sp.difficulty === "intermediate" ? "border-yellow-600 text-yellow-400" : "border-red-600 text-red-400"}`}>
+                    {sp.difficulty}
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div className="divide-y divide-[var(--border)] border border-[var(--border)] rounded-lg bg-[var(--surface)]">
         {workflows.map((w) => (
           <Link
             key={w.slug}
             href={`/workflows/${w.slug}`}
-            className="flex items-center gap-3 py-2 px-3 hover:bg-[var(--hover)] rounded-lg group border-b border-[var(--border)] last:border-0"
+            className="flex items-center gap-3 px-4 py-2.5 hover:bg-[var(--hover)]"
           >
             <span className="text-[var(--muted)] text-xs">file:</span>
             <span className="text-[var(--accent)] text-sm font-medium">{w.slug}.md</span>
             <span className="text-xs text-[var(--muted)] hidden sm:block truncate flex-1">{w.description}</span>
-            <span className="text-[10px] text-[var(--muted)] border border-[var(--border)] px-1.5 py-0.5 rounded">{w.models.best || "—"}</span>
+            <span className="text-[10px] text-[var(--muted)]">{w.models.best || "—"}</span>
           </Link>
         ))}
       </div>
 
       {relatedSearches.length > 0 && (
-        <div className="space-y-2 pt-4">
-          <div className="text-xs text-[var(--muted)] uppercase tracking-wider">Related searches</div>
+        <div className="space-y-2">
+          <div className="text-xs text-[var(--muted)] uppercase tracking-wider">related</div>
           <div className="flex flex-wrap gap-2">
             {relatedSearches.map((s) => (
               <Link key={keywordToSlug(s)} href={`/search/${keywordToSlug(s)}`}
@@ -92,10 +122,10 @@ export default async function CategoryPage({ params }: Props) {
         </div>
       )}
 
-      <div className="flex gap-3 text-xs text-[var(--muted)] pt-2">
-        <Link href="/trending" className="text-[var(--accent)] hover:underline">Trending →</Link>
-        <Link href="/featured" className="text-[var(--accent)] hover:underline">Featured →</Link>
-        <Link href="/search" className="text-[var(--accent)] hover:underline">Search →</Link>
+      <div className="flex gap-3 text-xs text-[var(--muted)]">
+        <Link href="/trending" className="text-[var(--accent)] hover:underline">trending →</Link>
+        <Link href="/featured" className="text-[var(--accent)] hover:underline">featured →</Link>
+        <Link href="/search" className="text-[var(--accent)] hover:underline">search →</Link>
       </div>
     </div>
   );

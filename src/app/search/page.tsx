@@ -1,10 +1,16 @@
 import { Suspense } from "react";
 import SearchClient from "./search-client";
+import { loadAllSettings } from "@/lib/settings";
 
-export const metadata = {
-  title: "Search Workflows — 1 Page",
-  description: "Search 10,000+ AI workflows by keyword, category, or model.",
-};
+export function generateMetadata() {
+  const s = loadAllSettings();
+  const suffix = s.seo.titleSuffix || "TLOGZ";
+  const desc = "Search AI workflows by keyword, category, or model.";
+  return {
+    title: `Search Workflows — ${suffix}`,
+    description: desc,
+  };
+}
 
 export default function SearchPage() {
   return (

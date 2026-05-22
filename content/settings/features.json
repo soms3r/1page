@@ -1,0 +1,12 @@
+{
+  "donation": true,
+  "shareUnlock": true,
+  "workflowGenerator": true,
+  "telegramPromo": false,
+  "banner": false,
+  "search": true,
+  "trending": true,
+  "featured": true,
+  "communityCta": true,
+  "statsDisplay": true
+}

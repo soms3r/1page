@@ -4,17 +4,14 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import rehypeSanitize from "rehype-sanitize";
 import type { Components } from "react-markdown";
 import type { Workflow, WorkflowMeta } from "@/lib/workflows";
 import type { RelatedWorkflows } from "./page";
 import type { ExpandedContent } from "@/lib/load-index";
 import { validateVariables } from "@/lib/validator";
 import { renderTemplate } from "@/lib/template";
-import { trackGenerate } from "@/lib/analytics";
-import ShareUnlock from "@/components/share-unlock";
-import ShareButtons from "@/components/share-buttons";
-
-const GITHUB_REPO = "soms3r/1page";
+import EasyModeModal from "@/components/easy-mode";
 
 const markdownComponents: Components = {
   code: ({ className, children, ...props }) => {
@@ -60,10 +57,11 @@ const markdownComponents: Components = {
 };
 
 export default function WorkflowClient({
-  workflow, slug, related, expanded,
+  workflow, slug, related, expanded, githubRepo, issuesUrl,
 }: {
   workflow: Workflow; slug: string;
   related: RelatedWorkflows; expanded: ExpandedContent | null;
+  githubRepo?: string; issuesUrl?: string;
 }) {
   const [values, setValues] = useState<Record<string, string>>(() => {
     const initial: Record<string, string> = {};
@@ -72,16 +70,12 @@ export default function WorkflowClient({
   });
   const [output, setOutput] = useState("");
   const [copied, setCopied] = useState(false);
-  const [bookmarked, setBookmarked] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showPreview, setShowPreview] = useState(false);
+  const [showEasyMode, setShowEasyMode] = useState(false);
   const outputRef = useRef<HTMLDivElement>(null);
 
   const hasVariables = workflow.variables && workflow.variables.length > 0;
-
-  useEffect(() => {
-    setBookmarked(!!localStorage.getItem(`bm:${slug}`));
-  }, [slug]);
 
   useEffect(() => {
     if (showPreview && outputRef.current) {
@@ -100,7 +94,6 @@ export default function WorkflowClient({
     const result = renderTemplate(workflow.body, values);
     setOutput(result);
     setShowPreview(true);
-    trackGenerate(slug);
   };
 
   const handleCopy = () => {
@@ -119,29 +112,31 @@ export default function WorkflowClient({
     setCopied(false);
   };
 
-  const toggleBookmark = () => {
-    if (bookmarked) {
-      localStorage.removeItem(`bm:${slug}`);
-      setBookmarked(false);
-    } else {
-      localStorage.setItem(`bm:${slug}`, "1");
-      setBookmarked(true);
-    }
-  };
-
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) generate();
   };
 
-  const ghSourceUrl = `https://github.com/${GITHUB_REPO}/blob/main/content/workflows/${workflow.category}/${slug}.md`;
-  const ghEditUrl = `https://github.com/${GITHUB_REPO}/edit/main/content/workflows/${workflow.category}/${slug}.md`;
-  const ghIssueUrl = `https://github.com/${GITHUB_REPO}/issues/new?title=Issue%20with%20${slug}&labels=bug`;
+  const handleShare = async () => {
+    const url = window.location.href;
+    if (navigator.share) {
+      await navigator.share({ title: workflow.title, text: workflow.description, url }).catch(() => {});
+    } else {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
+  const baseRepo = githubRepo || "https://github.com/soms3r/1page";
+  const ghSourceUrl = `${baseRepo}/blob/main/content/workflows/${workflow.category}/${slug}.md`;
+  const ghEditUrl = `${baseRepo}/edit/main/content/workflows/${workflow.category}/${slug}.md`;
+  const ghIssueUrl = issuesUrl || `${baseRepo}/issues/new?title=Issue%20with%20${slug}&labels=bug`;
 
   return (
     <div className="space-y-6">
-      {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-xs text-[var(--muted)]">
-        <Link href="/" className="text-[var(--accent)] hover:underline">/</Link>
+        <Link href="/" className="text-[var(--accent)] hover:underline">~</Link>
+        <span className="text-[var(--muted)]">/</span>
         <Link href={`/category/${workflow.category}`} className="text-[var(--accent)] hover:underline">{workflow.category}</Link>
         <span className="text-[var(--muted)]">/</span>
         <span className="text-[var(--foreground)]">{slug}.md</span>
@@ -157,22 +152,21 @@ export default function WorkflowClient({
             description: workflow.description,
             dateModified: workflow.updated,
             keywords: workflow.tags.join(", "),
-            author: { "@type": "Organization", name: "1 Page", url: "https://github.com/soms3r/1page" },
+            author: { "@type": "Organization", name: "TLOGZ", url: baseRepo },
           }),
         }}
       />
 
-      {/* Header */}
       <div className="border border-[var(--border)] rounded-lg p-4 bg-[var(--surface)]">
         <div className="flex items-center gap-2 mb-2">
-          <span className="text-[var(--muted)] text-xs">file:</span>
-          <span className="text-[var(--accent)] font-bold text-base">{slug}.md</span>
+          <span className="text-[var(--accent)] font-bold text-xs">$</span>
+          <span className="text-[var(--muted)] text-xs">cat</span>
+          <span className="text-[var(--accent)] font-bold text-sm">{slug}.md</span>
         </div>
-        <h1 className="text-xl font-bold">{workflow.title}</h1>
+        <h1 className="text-xl font-bold mt-2">{workflow.title}</h1>
         <p className="text-sm text-[var(--muted)] mt-1">{workflow.description}</p>
       </div>
 
-      {/* Metadata */}
       <div className="flex flex-wrap gap-2 text-xs">
         <Link
           href={`/category/${workflow.category}`}
@@ -191,7 +185,6 @@ export default function WorkflowClient({
         ))}
       </div>
 
-      {/* Model Info */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
         <div className="border border-[var(--border)] rounded-lg p-2">
           <div className="text-[var(--muted)]">Best</div>
@@ -211,21 +204,20 @@ export default function WorkflowClient({
         </div>
       </div>
 
-      {/* Actions */}
       <div className="flex flex-wrap items-center gap-2">
         <button onClick={handleCopy} className="text-xs">
-          {copied ? "✓ Copied!" : "Copy Workflow"}
+          {copied ? "✓ copied" : "copy prompt"}
         </button>
-        <button
-          onClick={toggleBookmark}
-          className="text-xs border border-[var(--border)] bg-transparent text-[var(--foreground)]"
-        >
-          {bookmarked ? "★ Bookmarked" : "☆ Bookmark"}
-        </button>
-        <ShareButtons slug={slug} title={workflow.title} />
+        {workflow.easyMode?.enabled && (
+          <button
+            onClick={() => setShowEasyMode(true)}
+            className="text-xs border border-[var(--accent)] bg-transparent text-[var(--accent)] px-3 py-1.5 rounded hover:bg-[var(--accent)] hover:text-black"
+          >
+            Use Easy Mode
+          </button>
+        )}
       </div>
 
-      {/* GitHub Links */}
       <div className="flex flex-wrap gap-2 text-xs">
         <a
           href={ghSourceUrl}
@@ -233,7 +225,7 @@ export default function WorkflowClient({
           rel="noopener noreferrer"
           className="text-[var(--accent)] border border-[var(--border)] px-2 py-1 rounded hover:border-[var(--accent)]"
         >
-          View Source
+          view source
         </a>
         <a
           href={ghEditUrl}
@@ -241,7 +233,7 @@ export default function WorkflowClient({
           rel="noopener noreferrer"
           className="text-[var(--accent)] border border-[var(--border)] px-2 py-1 rounded hover:border-[var(--accent)]"
         >
-          Edit on GitHub
+          edit on github
         </a>
         <a
           href={ghIssueUrl}
@@ -249,32 +241,28 @@ export default function WorkflowClient({
           rel="noopener noreferrer"
           className="text-[var(--accent)] border border-[var(--border)] px-2 py-1 rounded hover:border-[var(--accent)]"
         >
-          Report Issue
+          report issue
         </a>
       </div>
 
-      {/* Workflow Content */}
       {workflow.body && (
-        <ShareUnlock slug={slug} title={workflow.title} locked={workflow.locked}>
-          <div className="border border-[var(--border)] rounded-lg p-4 bg-[var(--surface)]">
-            <div className="text-xs text-[var(--muted)] mb-3 uppercase tracking-wider">Workflow</div>
-            <div className="prose prose-invert max-w-none text-sm [&_*]:text-[var(--foreground)]">
-              <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
-                {workflow.body}
-              </ReactMarkdown>
-            </div>
+        <div className="border border-[var(--border)] rounded-lg p-4 bg-[var(--surface)]">
+          <div className="text-xs text-[var(--muted)] mb-3 uppercase tracking-wider">workflow</div>
+          <div className="prose prose-invert max-w-none text-sm [&_*]:text-[var(--foreground)]">
+            <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeSanitize]} components={markdownComponents}>
+              {workflow.body}
+            </ReactMarkdown>
           </div>
-        </ShareUnlock>
+        </div>
       )}
 
-      {/* Variables */}
       {hasVariables && (
         <div className="space-y-3 border border-[var(--border)] rounded-lg p-4 bg-[var(--surface)]" onKeyDown={handleKeyDown}>
-          <div className="text-xs text-[var(--muted)] uppercase tracking-wider">Variables</div>
+          <div className="text-xs text-[var(--muted)] uppercase tracking-wider">variables</div>
           {workflow.variables!.map((v) => (
             <div key={v.name}>
               <label className="text-xs text-[var(--muted)] block mb-1">
-                {v.label}{v.required ? " *" : ""}
+                $ {v.label}{v.required ? " *" : ""}
               </label>
               <input
                 type="text"
@@ -294,36 +282,35 @@ export default function WorkflowClient({
             </div>
           ))}
           <div className="flex items-center gap-3 pt-1">
-            <button onClick={generate}>Generate</button>
-            <span className="text-xs text-[var(--muted)]">Ctrl+Enter</span>
+            <button onClick={generate}>generate</button>
+            <span className="text-xs text-[var(--muted)]">^Enter</span>
           </div>
         </div>
       )}
 
       {!hasVariables && (
         <div className="flex gap-2">
-          <button onClick={handleCopy}>Copy Prompt</button>
+          <button onClick={handleCopy}>copy prompt</button>
         </div>
       )}
 
-      {/* Output */}
       {showPreview && output && (
         <div ref={outputRef} className="space-y-2 border border-[var(--accent)] rounded-lg p-4">
           <div className="flex justify-between items-center">
-            <span className="text-sm text-[var(--accent)] font-bold">Output</span>
+            <span className="text-sm text-[var(--accent)] font-bold">output</span>
             <div className="flex gap-2">
               <button
                 onClick={handleCopy}
                 className="text-xs border border-[var(--accent)] bg-transparent text-[var(--accent)]"
               >
-                {copied ? "✓ Copied!" : "Copy"}
+                {copied ? "✓ copied" : "copy"}
               </button>
               {hasVariables && (
                 <button
                   onClick={handleReset}
                   className="text-xs border border-[var(--border)] bg-transparent text-[var(--muted)]"
                 >
-                  Reset
+                  reset
                 </button>
               )}
             </div>
@@ -334,31 +321,106 @@ export default function WorkflowClient({
         </div>
       )}
 
-      {/* Expanded Guide */}
       {expanded && (
         <div className="space-y-4 pt-4 border-t border-[var(--border)]">
-          <div className="text-xs text-[var(--muted)] uppercase tracking-wider">Workflow Guide</div>
+          <div className="text-xs text-[var(--muted)] uppercase tracking-wider">guide</div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <ExpandedSection title="How to Use" items={expanded.howToUse} />
-            <ExpandedSection title="Best Use Cases" items={expanded.bestUseCases} />
-            <ExpandedSection title="Examples" items={expanded.examples} />
-            <ExpandedSection title="Variations" items={expanded.variations} />
-            <ExpandedSection title="Common Mistakes" items={expanded.commonMistakes} />
+            <ExpandedSection title="how to use" items={expanded.howToUse} />
+            <ExpandedSection title="best use cases" items={expanded.bestUseCases} />
+            <ExpandedSection title="examples" items={expanded.examples} />
+            <ExpandedSection title="variations" items={expanded.variations} />
+            <ExpandedSection title="common mistakes" items={expanded.commonMistakes} />
           </div>
         </div>
       )}
 
-      {/* Related Workflows */}
       {(related.sameCategory.length > 0 || related.trending.length > 0 || related.tagMatched.length > 0) && (
         <div className="space-y-4 pt-4 border-t border-[var(--border)]">
-          <div className="text-xs text-[var(--muted)] uppercase tracking-wider">Related Workflows</div>
+          <div className="text-xs text-[var(--muted)] uppercase tracking-wider">related</div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            {related.sameCategory.length > 0 && <RelatedList title="Same Category" items={related.sameCategory} />}
-            {related.trending.length > 0 && <RelatedList title="Trending" items={related.trending} />}
-            {related.tagMatched.length > 0 && <RelatedList title="Similar Tags" items={related.tagMatched} />}
+            {related.sameCategory.length > 0 && <RelatedList title="same category" items={related.sameCategory} />}
+            {related.trending.length > 0 && <RelatedList title="trending" items={related.trending} />}
+            {related.tagMatched.length > 0 && <RelatedList title="similar tags" items={related.tagMatched} />}
           </div>
         </div>
       )}
+
+      <div className="border border-[var(--border)] rounded-lg p-4 bg-[var(--surface)] text-center space-y-2">
+        <p className="text-xs text-[var(--muted)]">$ echo &quot;contribute.sh&quot;</p>
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          <a
+            href={baseRepo}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs border border-[var(--accent)] text-[var(--accent)] px-3 py-1.5 rounded hover:bg-[var(--accent)] hover:text-black no-underline"
+          >
+            star repository
+          </a>
+          <a
+            href={ghEditUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs border border-[var(--border)] text-[var(--muted)] px-3 py-1.5 rounded hover:border-[var(--accent)] hover:text-[var(--accent)] no-underline"
+          >
+            improve this workflow
+          </a>
+          <a
+            href={ghIssueUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs border border-[var(--border)] text-[var(--muted)] px-3 py-1.5 rounded hover:border-[var(--accent)] hover:text-[var(--accent)] no-underline"
+          >
+            report issue
+          </a>
+          <Link
+            href="/submit"
+            className="text-xs border border-[var(--border)] text-[var(--muted)] px-3 py-1.5 rounded hover:border-[var(--accent)] hover:text-[var(--accent)]"
+          >
+            submit new workflow
+          </Link>
+        </div>
+      </div>
+
+      {showEasyMode && workflow.easyMode && (
+        <EasyModeModal
+          config={workflow.easyMode}
+          title={workflow.title}
+          onClose={() => setShowEasyMode(false)}
+          onCopy={handleCopy}
+        />
+      )}
+
+      <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-[var(--border)] bg-[var(--surface)] sm:hidden pb-14">
+        <div className="flex items-center justify-around h-12 px-2">
+          <Link
+            href={`/submit`}
+            className="flex items-center justify-center gap-1.5 min-h-11 min-w-0 flex-1 px-2 text-xs text-[var(--accent)] border border-[var(--accent)] rounded-md mx-1 no-underline hover:bg-[var(--accent)] hover:text-black"
+          >
+            <span className="text-sm">↻</span> Remix
+          </Link>
+          <button
+            onClick={handleCopy}
+            className="flex items-center justify-center gap-1.5 min-h-11 min-w-0 flex-1 px-2 text-xs border border-[var(--border)] rounded-md mx-1 bg-transparent text-[var(--foreground)]"
+          >
+            <span className="text-sm">⎘</span> {copied ? "Copied" : "Copy"}
+          </button>
+          {workflow.easyMode?.enabled ? (
+            <button
+              onClick={() => setShowEasyMode(true)}
+              className="flex items-center justify-center gap-1.5 min-h-11 min-w-0 flex-1 px-2 text-xs text-black bg-[var(--accent)] rounded-md mx-1"
+            >
+              <span className="text-sm">✦</span> Easy
+            </button>
+          ) : (
+            <button
+              onClick={handleShare}
+              className="flex items-center justify-center gap-1.5 min-h-11 min-w-0 flex-1 px-2 text-xs border border-[var(--border)] rounded-md mx-1 bg-transparent text-[var(--foreground)]"
+            >
+              <span className="text-sm">⇧</span> Share
+            </button>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

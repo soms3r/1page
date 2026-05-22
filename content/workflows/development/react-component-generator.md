@@ -35,6 +35,22 @@ variables:
     label: Styling Approach
     required: false
     placeholder: "e.g. Tailwind CSS, CSS Modules, styled-components"
+easyMode:
+  enabled: true
+  fields:
+    - name: componentType
+      type: text
+      label: Component Type
+      placeholder: "e.g. User profile card, data table, modal"
+    - name: styling
+      type: select
+      options: ["Tailwind CSS", "CSS Modules", "Styled Components", "Plain CSS"]
+      label: Styling
+    - name: enhancement
+      type: text
+      label: Enhancement Goal
+      placeholder: "e.g. Loading states, error handling, animations"
+  template: "You are a senior React engineer. Generate a production-ready {{componentType}} component using {{styling}}. Requirements: TypeScript, accessibility, responsive design. Additional features: {{enhancement}}. Return the full component code with props interface and a usage example."
 ---
 
 You are a senior React engineer. Generate a production-ready React component with the following specifications:

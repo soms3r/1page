@@ -13,11 +13,27 @@ export type WorkflowMeta = {
   featured: boolean;
   locked: boolean;
   refCount?: number;
+  hasEasyMode?: boolean;
+};
+
+export type EasyModeField = {
+  name: string;
+  type: "text" | "textarea" | "select" | "number";
+  label: string;
+  options?: string[];
+  placeholder?: string;
+};
+
+export type EasyModeConfig = {
+  enabled: boolean;
+  fields: EasyModeField[];
+  template: string;
 };
 
 export type Workflow = WorkflowMeta & {
   body: string;
   variables?: WorkflowVariable[];
+  easyMode?: EasyModeConfig;
 };
 
 export type WorkflowVariable = {

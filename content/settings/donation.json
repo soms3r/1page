@@ -1,0 +1,18 @@
+{
+  "enabled": false,
+  "title": "Support TLOGZ Prompt Flow",
+  "description": "Help keep the project running.",
+  "message": "TLOGZ Prompt Flow is a free, open-source AI workflow library. It costs time and money to maintain — hosting, infrastructure, and ongoing development.",
+  "supportMessage": "If you find this tool useful, consider supporting the project. Every contribution helps with:",
+  "reassurance": "No pressure. No obligation. If TLOGZ helps you, feel free to give back.",
+  "uses": [
+    "Server hosting and infrastructure",
+    "Ongoing maintenance and updates",
+    "New features and improvements",
+    "Documentation and community support"
+  ],
+  "githubSponsorsUrl": "",
+  "stripeDonationUrl": "",
+  "customLinksEnabled": false,
+  "customLinks": []
+}

@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { loadWorkflowIndex, loadSEOIndex, keywordToSlug } from "@/lib/load-index";
+import { loadAllSettings } from "@/lib/settings";
 import type { SEOEntry } from "@/lib/load-index";
 import type { WorkflowMeta } from "@/lib/workflows";
 
@@ -39,16 +40,18 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { query } = await params;
+  const s = loadAllSettings();
+  const suffix = s.seo.titleSuffix || "TLOGZ";
   const entry = cachedFlat.find((e) => e.slug === query);
-  if (!entry) return { title: "Search — 1 Page" };
+  if (!entry) return { title: `Search — ${suffix}` };
 
   const title = entry.original.charAt(0).toUpperCase() + entry.original.slice(1);
   return {
-    title: `${title} — 1 Page`,
+    title: `${title} — ${suffix}`,
     description: `Learn how to ${entry.original}. Use this AI workflow with ${entry.workflow.models.best || "your favorite model"} for ${entry.workflow.category} tasks.`,
     keywords: [entry.original, entry.workflow.category, ...entry.workflow.tags].join(", "),
     openGraph: {
-      title: `${title} — 1 Page`,
+      title: `${title} — ${suffix}`,
       description: `AI workflow for ${entry.original}. ${entry.workflow.description}`,
       type: "article",
     },
@@ -65,10 +68,9 @@ export default async function SearchQueryPage({ params }: Props) {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-2 text-xs text-[var(--muted)]">
-        <Link href="/" className="text-[var(--accent)] hover:underline">/</Link>
-        <span className="text-[var(--foreground)]">search</span>
+        <Link href="/" className="text-[var(--accent)] hover:underline">~</Link>
         <span className="text-[var(--muted)]">/</span>
-        <span className="text-[var(--accent)]">{original}</span>
+        <span className="text-[var(--accent)]">search/{original}</span>
       </div>
 
       <div className="space-y-2">

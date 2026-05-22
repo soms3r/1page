@@ -1,0 +1,12 @@
+{
+  "showTagline": true,
+  "links": [
+    { "label": "GitHub", "url": "https://github.com/soms3r/1page", "external": true },
+    { "label": "Website", "url": "https://tlogz.top", "external": true },
+    { "label": "Donate", "url": "/donate", "external": false },
+    { "label": "Issues", "url": "https://github.com/soms3r/1page/issues", "external": true },
+    { "label": "Contribute", "url": "https://github.com/soms3r/1page/blob/main/CONTRIBUTING.md", "external": true }
+  ],
+  "showCreator": true,
+  "showSponsor": true
+}

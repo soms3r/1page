@@ -19,6 +19,7 @@ type SearchIndexEntry = {
   updated: string;
   featured: boolean;
   locked: boolean;
+  hasEasyMode: boolean;
 };
 
 function buildSearchIndex(): void {
@@ -41,6 +42,7 @@ function buildSearchIndex(): void {
         const parsed = matter(content);
         const data = parsed.data as Record<string, unknown>;
 
+        const rawEasy = data.easyMode as Record<string, unknown> | undefined;
         index.push({
           title: String(data.title || ""),
           slug: String(data.slug || ""),
@@ -59,6 +61,7 @@ function buildSearchIndex(): void {
           updated: String(data.updated || ""),
           featured: Boolean(data.featured),
           locked: Boolean(data.locked),
+          hasEasyMode: rawEasy?.enabled === true,
         });
       } catch {
         // skip invalid files

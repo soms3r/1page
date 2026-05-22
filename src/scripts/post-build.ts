@@ -13,6 +13,12 @@ function copyPublicFiles() {
     "models.json",
     "seo-index.json",
     "stats.json",
+    "settings.json",
+    "routes.json",
+    "starter-packs.json",
+    "sitemap.xml",
+    "robots.txt",
+    "favicon.svg",
   ];
 
   for (const file of jsonFiles) {

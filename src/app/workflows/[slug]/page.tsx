@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { loadWorkflowIndex, loadWorkflowContent, loadSEOIndex, loadExpandedContent } from "@/lib/load-index";
 import type { WorkflowMeta } from "@/lib/workflows";
-import type { SEOEntry, ExpandedContent } from "@/lib/load-index";
+import { loadAllSettings } from "@/lib/settings";
 import WorkflowClient from "./workflow-client";
 
 export const dynamicParams = false;
@@ -51,7 +51,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const entry = seo.find((e) => e.slug === slug);
 
   return {
-    title: entry?.title ?? `${workflow.title} — 1 Page`,
+    title: entry?.title ?? `${workflow.title} — TLOGZ`,
     description: entry?.description ?? workflow.description,
     keywords: entry ? entry.keywords.join(", ") : [...workflow.tags, workflow.category].join(", "),
     openGraph: {
@@ -72,6 +72,7 @@ export default async function WorkflowPage({ params }: Props) {
   const all = loadWorkflowIndex();
   const related = computeRelated(all, slug);
   const expanded = loadExpandedContent(slug);
+  const settings = loadAllSettings();
 
-  return <WorkflowClient workflow={workflow} slug={slug} related={related} expanded={expanded} />;
+  return <WorkflowClient workflow={workflow} slug={slug} related={related} expanded={expanded} githubRepo={settings.community.githubRepo} issuesUrl={settings.community.issuesUrl} />;
 }

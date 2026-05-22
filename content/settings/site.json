@@ -1,0 +1,17 @@
+{
+  "siteName": "TLOGZ Prompt Flow",
+  "tagline": "AI is Easy",
+  "description": "Open-source AI workflow library powered by the community. Discover, share, improve, and contribute AI workflows for ChatGPT, Claude, Gemini, and more.",
+  "creator": {
+    "name": "Tasneem Bin Ahsan",
+    "username": "@TBAhsan",
+    "url": "https://github.com/TBAhsan"
+  },
+  "website": "https://tlogz.top",
+  "sponsor": {
+    "name": "tlogz.com",
+    "url": "https://tlogz.com"
+  },
+  "favicon": "/favicon.ico",
+  "language": "en"
+}

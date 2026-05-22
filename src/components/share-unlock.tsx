@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 const STORAGE_PREFIX = "unlock:";
 
@@ -11,6 +11,21 @@ function isUnlocked(slug: string): boolean {
 
 function markUnlocked(slug: string): void {
   localStorage.setItem(`${STORAGE_PREFIX}${slug}`, "1");
+}
+
+function useUnlock(slug: string, locked: boolean) {
+  const [state, setState] = useState(() => {
+    if (!locked) return true;
+    return isUnlocked(slug);
+  });
+
+  return {
+    unlocked: state,
+    unlock: () => {
+      markUnlocked(slug);
+      setState(true);
+    },
+  };
 }
 
 export default function ShareUnlock({
@@ -24,24 +39,15 @@ export default function ShareUnlock({
   locked: boolean;
   children: React.ReactNode;
 }) {
-  const [unlocked, setUnlocked] = useState(() => !locked);
-
-  useEffect(() => {
-    if (locked) setUnlocked(isUnlocked(slug));
-  }, [locked, slug]);
+  const { unlocked, unlock } = useUnlock(slug, locked);
 
   if (!locked || unlocked) return <>{children}</>;
 
   const shareUrl = typeof window !== "undefined" ? window.location.href : "";
 
-  const handleUnlock = () => {
-    markUnlocked(slug);
-    setUnlocked(true);
-  };
-
   const handleCopyLink = () => {
     navigator.clipboard.writeText(shareUrl);
-    handleUnlock();
+    unlock();
   };
 
   const handleTwitter = () => {
@@ -51,7 +57,7 @@ export default function ShareUnlock({
       "_blank",
       "noopener"
     );
-    handleUnlock();
+    unlock();
   };
 
   const handleFacebook = () => {
@@ -60,7 +66,7 @@ export default function ShareUnlock({
       "_blank",
       "noopener"
     );
-    handleUnlock();
+    unlock();
   };
 
   return (
@@ -90,7 +96,7 @@ export default function ShareUnlock({
           Share on Facebook
         </button>
         <button
-          onClick={handleUnlock}
+          onClick={unlock}
           className="text-xs border border-[var(--accent)] bg-transparent text-[var(--accent)]"
         >
           Unlock (Skip)

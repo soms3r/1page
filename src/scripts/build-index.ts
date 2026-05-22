@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
-import type { WorkflowMeta, WorkflowVariable } from "../lib/workflows";
+import type { WorkflowMeta, WorkflowVariable, EasyModeConfig } from "../lib/workflows";
 
 const CONTENT_DIR = path.join(process.cwd(), "content");
 const PUBLIC_DIR = path.join(process.cwd(), "public");
@@ -11,6 +11,7 @@ type FullWorkflowContent = {
   meta: WorkflowMeta;
   body: string;
   variables?: WorkflowVariable[];
+  easyMode?: EasyModeConfig;
 };
 
 function parseWorkflowFile(filePath: string): FullWorkflowContent | null {
@@ -48,7 +49,19 @@ function parseWorkflowFile(filePath: string): FullWorkflowContent | null {
         }))
       : undefined;
 
-    return { meta, body: parsed.content, variables };
+    const rawEasy = data.easyMode as Record<string, unknown> | undefined;
+    let easyMode: EasyModeConfig | undefined;
+    if (rawEasy && rawEasy.enabled) {
+      easyMode = {
+        enabled: true,
+        fields: Array.isArray(rawEasy.fields)
+          ? (rawEasy.fields as EasyModeConfig["fields"])
+          : [],
+        template: String(rawEasy.template || ""),
+      };
+    }
+
+    return { meta, body: parsed.content, variables, easyMode };
   } catch {
     return null;
   }
@@ -120,6 +133,7 @@ function build() {
       title: w.meta.title,
       body: w.body,
       variables: w.variables || null,
+      easyMode: w.easyMode || null,
     };
     fs.writeFileSync(path.join(contentDir, `${w.meta.slug}.json`), JSON.stringify(content, null, 2));
   }

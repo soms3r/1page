@@ -40,6 +40,26 @@ variables:
     label: Unique Selling Point
     required: false
     placeholder: "e.g. AI-powered budgeting"
+easyMode:
+  enabled: true
+  fields:
+    - name: niche
+      type: text
+      label: Niche
+      placeholder: "e.g. Personal finance, SaaS, Health & fitness"
+    - name: platform
+      type: select
+      options: ["Facebook", "Instagram", "LinkedIn", "TikTok"]
+      label: Platform
+    - name: goal
+      type: select
+      options: ["Lead generation", "Brand awareness", "Sales", "Engagement"]
+      label: Campaign Goal
+    - name: tone
+      type: select
+      options: ["Professional", "Casual", "Urgent", "Humorous"]
+      label: Tone of Voice
+  template: "Act as a Facebook ad copywriting expert. Write a high-converting ad for the {{niche}} niche on {{platform}}. Campaign goal: {{goal}}. Tone: {{tone}}. Structure the ad with a hook, body, social proof, and a clear CTA. Use bold section headers."
 ---
 
 You are a Facebook ad copywriting expert. Write a high-converting Facebook ad for the following:
