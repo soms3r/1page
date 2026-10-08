@@ -1,0 +1,46 @@
+{
+  "generated": "2026-10-09",
+  "source": "https://tlogz.top/workflows",
+  "description": "Catalog of every AI prompt workflow on TLOGZ. Each entry has a full source file at workflows/<category>/<slug>.md.",
+  "count": 28,
+  "categories": ["chatgpt", "claude", "content", "development", "education", "freelancing", "gemini", "marketing", "seo", "writing"],
+  "workflows": [
+    { "slug": "chatgpt-conversational-tutor", "title": "ChatGPT Conversational Tutor", "category": "chatgpt", "description": "Learn any subject through adaptive Socratic dialogue with ChatGPT, tailored to your knowledge level and learning style.", "url": "https://tlogz.top/workflows/chatgpt-conversational-tutor/" },
+    { "slug": "chatgpt-gpt-builder-configurator", "title": "ChatGPT GPT Builder Configurator", "category": "chatgpt", "description": "Design custom GPTs for ChatGPT with tailored instructions, knowledge files, conversation starters, and capabilities.", "url": "https://tlogz.top/workflows/chatgpt-gpt-builder-configurator/" },
+    { "slug": "chatgpt-prompt-library-manager", "title": "ChatGPT Prompt Library Manager", "category": "chatgpt", "description": "Design, organize, and optimize a reusable library of ChatGPT prompts for consistent output across projects and teams.", "url": "https://tlogz.top/workflows/chatgpt-prompt-library-manager/" },
+
+    { "slug": "claude-document-analyzer", "title": "Claude Document Analyzer", "category": "claude", "description": "Analyze, summarize, and extract insights from large documents using Claude's 200K context window.", "url": "https://tlogz.top/workflows/claude-document-analyzer/" },
+    { "slug": "claude-knowledge-base-builder", "title": "Claude Knowledge Base Builder", "category": "claude", "description": "Create structured knowledge bases with Claude Projects, organizing documents, concepts, and relationships for consistent AI-assisted work.", "url": "https://tlogz.top/workflows/claude-knowledge-base-builder/" },
+
+    { "slug": "ecommerce-product-copywriter", "title": "E-Commerce Product Copywriter", "category": "content", "description": "Write product descriptions, feature highlights, and SEO-optimized copy that converts browsers into buyers.", "url": "https://tlogz.top/workflows/ecommerce-product-copywriter/" },
+    { "slug": "newsletter-content-creator", "title": "Newsletter Content Creator", "category": "content", "description": "Write engaging newsletter issues with subject lines, curated content, original analysis, and growth strategies.", "url": "https://tlogz.top/workflows/newsletter-content-creator/" },
+    { "slug": "press-release-pr-writer", "title": "Press Release & PR Statement Writer", "category": "content", "description": "Write professional press releases, media statements, and PR announcements following journalistic standards.", "url": "https://tlogz.top/workflows/press-release-pr-writer/" },
+    { "slug": "video-script-writer", "title": "Video Script Writer", "category": "content", "description": "Write engaging video scripts for YouTube, TikTok, Instagram Reels, and other short/long-form video platforms.", "url": "https://tlogz.top/workflows/video-script-writer/" },
+
+    { "slug": "code-review-refactor-assistant", "title": "Code Review & Refactoring Assistant", "category": "development", "description": "Review code for bugs, performance issues, security vulnerabilities, and refactoring opportunities.", "url": "https://tlogz.top/workflows/code-review-refactor-assistant/" },
+    { "slug": "database-schema-sql-builder", "title": "Database Schema & SQL Builder", "category": "development", "description": "Design normalized database schemas, write optimized SQL queries, and generate migration scripts.", "url": "https://tlogz.top/workflows/database-schema-sql-builder/" },
+    { "slug": "fullstack-crud-generator", "title": "Full-Stack CRUD API Generator", "category": "development", "description": "Generate complete CRUD API endpoints with database schema, validation, error handling, and frontend integration code.", "url": "https://tlogz.top/workflows/fullstack-crud-generator/" },
+    { "slug": "react-component-generator", "title": "React Component Generator", "category": "development", "description": "Generate production-ready React components with TypeScript, Tailwind, and proper prop typing.", "url": "https://tlogz.top/workflows/react-component-generator/" },
+
+    { "slug": "lesson-plan-curriculum-designer", "title": "Lesson Plan & Curriculum Designer", "category": "education", "description": "Design structured lesson plans, course curricula, and learning objectives following educational best practices.", "url": "https://tlogz.top/workflows/lesson-plan-curriculum-designer/" },
+    { "slug": "quiz-assessment-generator", "title": "Quiz & Assessment Generator", "category": "education", "description": "Generate quizzes, tests, and assessments with varied question types, difficulty levels, and answer explanations.", "url": "https://tlogz.top/workflows/quiz-assessment-generator/" },
+
+    { "slug": "client-proposal-pitch-builder", "title": "Client Proposal & Pitch Builder", "category": "freelancing", "description": "Write winning freelance proposals, project pitches, and client presentations that demonstrate value and close deals.", "url": "https://tlogz.top/workflows/client-proposal-pitch-builder/" },
+    { "slug": "freelance-brand-portfolio-kit", "title": "Freelance Brand & Portfolio Kit", "category": "freelancing", "description": "Build a compelling freelance brand identity, portfolio case studies, and marketing materials to attract higher-value clients.", "url": "https://tlogz.top/workflows/freelance-brand-portfolio-kit/" },
+
+    { "slug": "gemini-multimodal-analyzer", "title": "Gemini Multimodal Analyzer", "category": "gemini", "description": "Extract insights from images, documents, audio, and video using Gemini's multimodal capabilities.", "url": "https://tlogz.top/workflows/gemini-multimodal-analyzer/" },
+    { "slug": "gemini-research-synthesizer", "title": "Gemini Research Synthesizer", "category": "gemini", "description": "Synthesize information across multiple sources, formats, and perspectives using Gemini's long-context capabilities.", "url": "https://tlogz.top/workflows/gemini-research-synthesizer/" },
+
+    { "slug": "competitor-market-research", "title": "Competitor & Market Research", "category": "marketing", "description": "Analyze competitors, identify market gaps, and generate actionable competitive intelligence reports.", "url": "https://tlogz.top/workflows/competitor-market-research/" },
+    { "slug": "email-campaign-builder", "title": "Email Campaign Builder", "category": "marketing", "description": "Write high-converting email sequences for launches, newsletters, onboarding, and re-engagement campaigns.", "url": "https://tlogz.top/workflows/email-campaign-builder/" },
+    { "slug": "facebook-ad-generator", "title": "Facebook Ad Generator", "category": "marketing", "description": "Create high-converting Facebook ad copy with structured prompts for audience targeting, creative hooks, and CTAs.", "url": "https://tlogz.top/workflows/facebook-ad-generator/" },
+    { "slug": "multi-platform-ad-copy-generator", "title": "Multi-Platform Ad Copy Generator", "category": "marketing", "description": "Generate tailored ad copy for Facebook, Instagram, LinkedIn, Google, and TikTok from a single brief.", "url": "https://tlogz.top/workflows/multi-platform-ad-copy-generator/" },
+    { "slug": "social-media-content-calendar", "title": "Social Media Content Calendar", "category": "marketing", "description": "Plan and generate a month of platform-specific social media content with captions, visuals, and engagement strategies.", "url": "https://tlogz.top/workflows/social-media-content-calendar/" },
+
+    { "slug": "keyword-research-clustering", "title": "Keyword Research & Content Clustering", "category": "seo", "description": "Research keywords, group them into topical clusters, and create a content strategy that targets search intent.", "url": "https://tlogz.top/workflows/keyword-research-clustering/" },
+    { "slug": "link-building-outreach", "title": "Link Building Outreach Email Generator", "category": "seo", "description": "Write personalized outreach emails that earn backlinks from relevant websites, blogs, and publications.", "url": "https://tlogz.top/workflows/link-building-outreach/" },
+    { "slug": "technical-seo-audit", "title": "Technical SEO Audit Assistant", "category": "seo", "description": "Audit website technical SEO health, identify issues, and generate prioritized fix recommendations.", "url": "https://tlogz.top/workflows/technical-seo-audit/" },
+
+    { "slug": "seo-blog-post-writer", "title": "SEO Blog Post Writer", "category": "writing", "description": "Write search-engine-optimized blog posts with keyword research, headings structure, and meta descriptions.", "url": "https://tlogz.top/workflows/seo-blog-post-writer/" }
+  ]
+}

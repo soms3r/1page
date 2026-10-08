@@ -1,86 +1,39 @@
 ---
 title: "React Component Generator"
-slug: "react-component-generator"
+slug: react-component-generator
 description: "Generate production-ready React components with TypeScript, Tailwind, and proper prop typing."
-category: "development"
-tags:
-  - react
-  - typescript
-  - component
-  - frontend
+category: development
+tags: [react, typescript, tailwind, frontend, components]
 models:
-  best: "claude-sonnet-4"
-  good:
-    - "gpt-4o"
-    - "gemini-2.5-pro"
-  limited:
-    - "gpt-4o-mini"
-    - "claude-haiku"
-updated: "2026-05-21"
-featured: true
+  best: claude-sonnet-4
+  good: [gpt-4o]
+  limited: [gpt-4o-mini]
+updated: 2026-10-09
+featured: false
+source: "https://tlogz.top/workflows/react-component-generator/"
 variables:
-  - name: componentName
+  - name: component
     label: Component Name
     required: true
-    placeholder: "e.g. UserProfileCard"
+    placeholder: "e.g. PricingCard"
+  - name: purpose
+    label: What It Does
+    required: true
+    placeholder: "e.g. Displays a plan with price, features, and a CTA button"
   - name: props
-    label: Props (comma-separated)
+    label: Key Props
     required: false
-    placeholder: "e.g. name, email, avatarUrl, role"
-  - name: features
-    label: Key Features
-    required: false
-    placeholder: "e.g. loading state, error handling, dark mode"
-  - name: styling
-    label: Styling Approach
-    required: false
-    placeholder: "e.g. Tailwind CSS, CSS Modules, styled-components"
-easyMode:
-  enabled: true
-  fields:
-    - name: componentType
-      type: text
-      label: Component Type
-      placeholder: "e.g. User profile card, data table, modal"
-    - name: styling
-      type: select
-      options: ["Tailwind CSS", "CSS Modules", "Styled Components", "Plain CSS"]
-      label: Styling
-    - name: enhancement
-      type: text
-      label: Enhancement Goal
-      placeholder: "e.g. Loading states, error handling, animations"
-  template: "You are a senior React engineer. Generate a production-ready {{componentType}} component using {{styling}}. Requirements: TypeScript, accessibility, responsive design. Additional features: {{enhancement}}. Return the full component code with props interface and a usage example."
+    placeholder: "e.g. title, price, features[], highlighted"
 ---
 
-You are a senior React engineer. Generate a production-ready React component with the following specifications:
+You are a senior React engineer. Generate a production-ready component.
 
-**Component Name**: `{{componentName}}`
-**Props**: {{props || "Standard HTML attributes"}}
-**Features**: {{features || "Basic rendering with TypeScript"}}
-**Styling**: {{styling || "Tailwind CSS"}}
+**Component:** {{component}}
+**Purpose:** {{purpose}}
+**Props:** {{props || "infer sensible props"}}
 
-## Requirements
-
-1. **TypeScript** – Full type definitions for all props using `interface`
-2. **Prop defaults** – Sensible defaults for optional props
-3. **Accessibility** – Proper ARIA attributes and keyboard support
-4. **Edge cases** – Handle loading, empty, error, and success states
-5. **Responsive** – Mobile-first design approach
-
-## Output Format
-
-```tsx
-// {{componentName}}.tsx
-import { type FC } from 'react';
-
-interface {{componentName}}Props {
-  // ... props
-}
-
-export const {{componentName}}: FC<{{componentName}}Props> = ({ ... }) => {
-  // ... implementation
-};
-```
-
-Include a usage example at the bottom as a comment block.
+Requirements:
+- TypeScript with a typed props interface.
+- Tailwind CSS for styling — responsive and accessible (ARIA where relevant).
+- Handle loading / empty / error states if applicable.
+- Include a short usage example and 2–3 unit test cases (Vitest + React Testing Library).

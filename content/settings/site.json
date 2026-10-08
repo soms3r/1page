@@ -1,17 +1,19 @@
 {
-  "siteName": "TLOGZ Prompt Flow",
-  "tagline": "AI is Easy",
-  "description": "Open-source AI workflow library powered by the community. Discover, share, improve, and contribute AI workflows for ChatGPT, Claude, Gemini, and more.",
-  "creator": {
-    "name": "Tasneem Bin Ahsan",
-    "username": "@TBAhsan",
-    "url": "https://github.com/TBAhsan"
+  "name": "TLOGZ",
+  "repo": "1Page",
+  "tagline": "Free tools that run in your browser, plus ready-to-run AI prompts.",
+  "motto": "AI is Easy.",
+  "privacy": "Everything runs client-side. No sign-up, no uploads, no tracking.",
+  "updated": "2026-10-09",
+  "domains": {
+    "main": "https://tlogz.top",
+    "tools": "https://tools.tlogz.top",
+    "bangla": "https://zero.tlogz.top",
+    "blog": "https://tlogz.com"
   },
-  "website": "https://tlogz.top",
-  "sponsor": {
-    "name": "tlogz.com",
-    "url": "https://tlogz.com"
-  },
-  "favicon": "/favicon.ico",
-  "language": "en"
+  "counts": {
+    "tools": 21,
+    "toolsExtended": "100+",
+    "workflows": 28
+  }
 }

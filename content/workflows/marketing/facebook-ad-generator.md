@@ -1,82 +1,41 @@
 ---
 title: "Facebook Ad Generator"
-slug: "facebook-ad-generator"
+slug: facebook-ad-generator
 description: "Create high-converting Facebook ad copy with structured prompts for audience targeting, creative hooks, and CTAs."
-category: "marketing"
-tags:
-  - facebook
-  - ads
-  - copywriting
-  - social-media
+category: marketing
+tags: [facebook, ads, copywriting, social-media, paid-ads]
 models:
-  best: "claude-sonnet-4"
-  good:
-    - "gpt-4o"
-    - "gemini-2.5-pro"
-  limited:
-    - "claude-haiku"
-    - "gpt-4o-mini"
-updated: "2026-05-20"
+  best: claude-sonnet-4
+  good: [gpt-4o, gemini-2.5-pro]
+  limited: [claude-haiku, gpt-4o-mini]
+updated: 2026-10-09
 featured: true
-locked: true
+source: "https://tlogz.top/workflows/facebook-ad-generator/"
 variables:
   - name: product
-    label: Product/Service Name
+    label: Product / Service
     required: true
     placeholder: "e.g. BudgetTracker Pro"
   - name: audience
     label: Target Audience
     required: true
-    placeholder: "e.g. Small business owners aged 25-45"
-  - name: goal
-    label: Campaign Goal
-    required: true
-    placeholder: "e.g. Lead generation"
+    placeholder: "e.g. Small business owners aged 25–45"
   - name: tone
     label: Tone of Voice
     required: false
     placeholder: "e.g. Professional, casual, urgent"
-  - name: usp
-    label: Unique Selling Point
-    required: false
-    placeholder: "e.g. AI-powered budgeting"
-easyMode:
-  enabled: true
-  fields:
-    - name: niche
-      type: text
-      label: Niche
-      placeholder: "e.g. Personal finance, SaaS, Health & fitness"
-    - name: platform
-      type: select
-      options: ["Facebook", "Instagram", "LinkedIn", "TikTok"]
-      label: Platform
-    - name: goal
-      type: select
-      options: ["Lead generation", "Brand awareness", "Sales", "Engagement"]
-      label: Campaign Goal
-    - name: tone
-      type: select
-      options: ["Professional", "Casual", "Urgent", "Humorous"]
-      label: Tone of Voice
-  template: "Act as a Facebook ad copywriting expert. Write a high-converting ad for the {{niche}} niche on {{platform}}. Campaign goal: {{goal}}. Tone: {{tone}}. Structure the ad with a hook, body, social proof, and a clear CTA. Use bold section headers."
 ---
 
-You are a Facebook ad copywriting expert. Write a high-converting Facebook ad for the following:
+You are a direct-response Facebook ad copywriter. Write a high-converting Facebook ad.
 
-**Product/Service**: {{product}}
-**Target Audience**: {{audience}}
-**Campaign Goal**: {{goal}}
-**Tone**: {{tone || "Professional"}}
-**Unique Selling Point**: {{usp || "Not specified"}}
+**Product/Service:** {{product}}
+**Target Audience:** {{audience}}
+**Tone:** {{tone || "Professional but conversational"}}
 
-Structure the ad with:
-1. **Hook** – First 1-2 lines that stop the scroll
-2. **Body** – 2-3 short paragraphs explaining the value proposition
-3. **Social Proof** – One line of credibility
-4. **Call to Action** – Clear, urgent CTA
-5. **Primary Text** – Full ad text version
-6. **Headline** – Short headline for the ad creative
-7. **Description** – One-line description
+Deliver:
+1. **Hook** — 1–2 lines that stop the scroll.
+2. **Body** — 2–3 short paragraphs on the value proposition.
+3. **Social proof** — one line of credibility.
+4. **CTA** — a clear, urgent call to action.
 
-Format the output with clear section headers using **bold** markdown.
+Also provide 3 headline variants (≤ 40 characters) and 1 primary-text variant (≤ 125 characters).

@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="440" viewBox="0 0 1600 440" role="img" aria-label="1Page by TLOGZ — free tools that run in your browser, plus ready-to-run AI prompts">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0a1020"/>
+      <stop offset="0.5" stop-color="#16233f"/>
+      <stop offset="1" stop-color="#0b1424"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#3b82f6" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#3b82f6" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="accentgrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#60a5fa"/>
+      <stop offset="1" stop-color="#2563eb"/>
+    </linearGradient>
+    <linearGradient id="cardgrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0e1a30"/>
+      <stop offset="1" stop-color="#0b1424"/>
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#ffffff" stroke-opacity="0.035" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <!-- background -->
+  <rect width="1600" height="440" fill="url(#bg)"/>
+  <rect width="1600" height="440" fill="url(#grid)"/>
+  <ellipse cx="430" cy="215" rx="430" ry="240" fill="url(#glow)"/>
+
+  <!-- left: prompt line -->
+  <text x="82" y="118" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="26" fill="#60a5fa" letter-spacing="0.5">$ 1page --help</text>
+  <rect x="326" y="98" width="13" height="26" fill="#60a5fa" opacity="0.9"/>
+
+  <!-- left: wordmark -->
+  <text x="80" y="248" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="116" font-weight="800"><tspan fill="#60a5fa">1</tspan><tspan fill="#ffffff">Page</tspan></text>
+
+  <!-- by TLOGZ pill -->
+  <rect x="452" y="196" width="158" height="46" rx="23" fill="#60a5fa" fill-opacity="0.12" stroke="#2c4678" stroke-width="1.5"/>
+  <text x="531" y="226" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="22" fill="#93c5fd">by TLOGZ</text>
+
+  <!-- left: tagline -->
+  <text x="82" y="304" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="31" fill="#e6ecf8">Free tools that run in your browser,</text>
+  <text x="82" y="344" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="31" fill="#e6ecf8">plus ready-to-run <tspan font-weight="700" fill="#93c5fd">AI prompt workflows</tspan>.</text>
+  <text x="82" y="392" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" fill="#6b7a99">Open-source · Static export · No database · MIT</text>
+
+  <!-- right: terminal card -->
+  <rect x="920" y="64" width="620" height="316" rx="16" fill="url(#cardgrad)" stroke="#243152" stroke-width="1.5"/>
+  <circle cx="950" cy="94" r="6.5" fill="#f87171"/>
+  <circle cx="971" cy="94" r="6.5" fill="#fde68a"/>
+  <circle cx="992" cy="94" r="6.5" fill="#4ade80"/>
+  <text x="1020" y="100" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18" fill="#6b7a99">workflow.md</text>
+  <line x1="920" y1="122" x2="1540" y2="122" stroke="#1b2a47" stroke-width="1.5"/>
+
+  <text x="950" y="160" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" fill="#93c5fd">$ tlogz use seo-blog-writer</text>
+  <text x="950" y="196" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" fill="#4ade80">✓ loaded · model: claude-sonnet-4</text>
+  <text x="950" y="232" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" fill="#c3cde3">→ fill {{topic}} {{audience}}</text>
+  <text x="950" y="268" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" fill="#c3cde3">→ fill {{keywords}} {{tone}}</text>
+
+  <!-- copy button -->
+  <rect x="950" y="300" width="212" height="50" rx="11" fill="#2563eb"/>
+  <rect x="972" y="317" width="15" height="15" rx="3" fill="none" stroke="#ffffff" stroke-width="2"/>
+  <path d="M969 314 h13 a2 2 0 0 1 2 2 v13" fill="none" stroke="#ffffff" stroke-width="2"/>
+  <text x="1000" y="332" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" fill="#ffffff">Copy prompt</text>
+</svg>

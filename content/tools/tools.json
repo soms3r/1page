@@ -1,0 +1,37 @@
+{
+  "generated": "2026-10-09",
+  "source": "https://tlogz.top",
+  "description": "Catalog of every free browser tool on TLOGZ. All tools run client-side; nothing is uploaded.",
+  "count": 21,
+  "categories": ["text", "math", "health", "security", "developer", "design", "creator", "utility"],
+  "tools": [
+    { "slug": "case-converter", "title": "Case Converter", "tag": "TXT", "category": "text", "description": "Convert any text to UPPERCASE, lowercase, Title Case, camelCase, snake_case and more in one click.", "url": "https://tlogz.top/tools/case-converter/", "clientSide": true },
+    { "slug": "word-counter", "title": "Word Counter", "tag": "TXT", "category": "text", "description": "Count words, characters, sentences and paragraphs as you type, with an estimated reading time.", "url": "https://tlogz.top/tools/word-counter/", "clientSide": true },
+    { "slug": "find-and-replace", "title": "Find and Replace", "tag": "TXT", "category": "text", "description": "Replace every match of a word or phrase in your text, with optional case matching and regex support.", "url": "https://tlogz.top/tools/find-and-replace/", "clientSide": true },
+    { "slug": "character-counter", "title": "Character Counter", "tag": "TXT", "category": "text", "description": "Count characters and check them against common limits for X posts, SEO meta tags, SMS and Instagram captions.", "url": "https://tlogz.top/tools/character-counter/", "clientSide": true },
+    { "slug": "remove-duplicate-lines", "title": "Remove Duplicate Lines", "tag": "TXT", "category": "text", "description": "Paste a list and remove repeated lines in one click. The original order is kept.", "url": "https://tlogz.top/tools/remove-duplicate-lines/", "clientSide": true },
+    { "slug": "sort-lines", "title": "Sort Lines", "tag": "TXT", "category": "text", "description": "Sort lines alphabetically, numerically or by length, or shuffle them randomly.", "url": "https://tlogz.top/tools/sort-lines/", "clientSide": true },
+    { "slug": "text-to-slug", "title": "Text to Slug Converter", "tag": "TXT", "category": "text", "description": "Turn any title into a clean, lowercase URL slug with hyphens or underscores, and accents removed.", "url": "https://tlogz.top/tools/text-to-slug/", "clientSide": true },
+
+    { "slug": "percentage-calculator", "title": "Percentage Calculator", "tag": "MATH", "category": "math", "description": "Three everyday percentage calculations in one place, with results that update as you type.", "url": "https://tlogz.top/tools/percentage-calculator/", "clientSide": true },
+    { "slug": "unit-converter", "title": "Unit Converter", "tag": "MATH", "category": "math", "description": "Convert length, weight, volume and temperature between common units, instantly.", "url": "https://tlogz.top/tools/unit-converter/", "clientSide": true },
+    { "slug": "age-calculator", "title": "Age Calculator", "tag": "MATH", "category": "math", "description": "Find out exact age in years, months and days, and count down to the next birthday.", "url": "https://tlogz.top/tools/age-calculator/", "clientSide": true },
+    { "slug": "roman-numeral-converter", "title": "Roman Numeral Converter", "tag": "MATH", "category": "math", "description": "Convert numbers from 1 to 3999 into Roman numerals, or read a Roman numeral back into a number.", "url": "https://tlogz.top/tools/roman-numeral-converter/", "clientSide": true },
+
+    { "slug": "bmi-calculator", "title": "BMI Calculator", "tag": "HEALTH", "category": "health", "description": "Calculate your Body Mass Index (BMI) and see the healthy weight range for your height.", "url": "https://tlogz.top/tools/bmi-calculator/", "clientSide": true },
+
+    { "slug": "password-generator", "title": "Password Generator", "tag": "SEC", "category": "security", "description": "Create a strong random password in one click. It is generated in your browser and never sent anywhere.", "url": "https://tlogz.top/tools/password-generator/", "clientSide": true },
+
+    { "slug": "json-formatter", "title": "JSON Formatter and Validator", "tag": "DEV", "category": "developer", "description": "Paste JSON to format it neatly, compress it into one line, or check it for errors.", "url": "https://tlogz.top/tools/json-formatter/", "clientSide": true },
+    { "slug": "base64-encoder-decoder", "title": "Base64 Encoder and Decoder", "tag": "DEV", "category": "developer", "description": "Encode text to Base64 or decode Base64 back to readable text, with full support for accents and emoji.", "url": "https://tlogz.top/tools/base64-encoder-decoder/", "clientSide": true },
+    { "slug": "unix-timestamp-converter", "title": "Unix Timestamp Converter", "tag": "DEV", "category": "developer", "description": "Convert Unix timestamps (epoch seconds or milliseconds) to dates, and dates back to timestamps.", "url": "https://tlogz.top/tools/unix-timestamp-converter/", "clientSide": true },
+    { "slug": "json-to-csv", "title": "JSON to CSV Converter", "tag": "DEV", "category": "developer", "description": "Turn a JSON array into a CSV file for Excel or Google Sheets. Your data is converted in your browser and never uploaded.", "url": "https://tlogz.top/tools/json-to-csv/", "clientSide": true },
+
+    { "slug": "lorem-ipsum-generator", "title": "Lorem Ipsum Generator", "tag": "DESIGN", "category": "design", "description": "Generate placeholder text for designs, mockups and websites, in paragraphs, sentences or words.", "url": "https://tlogz.top/tools/lorem-ipsum-generator/", "clientSide": true },
+    { "slug": "hex-rgb-color-converter", "title": "HEX to RGB Color Converter", "tag": "DESIGN", "category": "design", "description": "Convert a HEX color to RGB and HSL, or pick a color visually and copy the values for your CSS.", "url": "https://tlogz.top/tools/hex-rgb-color-converter/", "clientSide": true },
+
+    { "slug": "youtube-chapter-formatter", "title": "YouTube Chapter Formatter", "tag": "CREATOR", "category": "creator", "description": "Turn a rough list of times and topics into YouTube chapters, and check the rules before you publish.", "url": "https://tlogz.top/tools/youtube-chapter-formatter/", "clientSide": true },
+
+    { "slug": "wifi-qr-code-generator", "title": "WiFi QR Code Generator", "tag": "NET", "category": "utility", "description": "Create a QR code that lets guests join your WiFi by scanning it. The code is made in your browser.", "url": "https://tlogz.top/tools/wifi-qr-code-generator/", "clientSide": true }
+  ]
+}

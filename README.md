@@ -1,212 +1,234 @@
 <div align="center">
 
-# TLOGZ
+<img src="assets/banner.png" alt="1Page by TLOGZ — free tools that run in your browser, plus ready-to-run AI prompts" width="100%">
 
-**AI is Easy.**
+# 1Page
 
-An open-source library of ready-to-use AI workflows. Search, copy, paste, and run.
+### The open-source home of [TLOGZ](https://tlogz.top)
 
-[Explore Workflows](https://tlogz.top) · [Search](https://tlogz.top/search) · [Submit Yours](https://tlogz.top/submit) · [GitHub](https://github.com/soms3r/1page)
+**21 free browser tools + 28 ready-to-run AI prompt workflows.**
+_AI is Easy._
+
+[![Live Site](https://img.shields.io/badge/🌐_Live-tlogz.top-2563eb?style=for-the-badge)](https://tlogz.top)
+[![Tools](https://img.shields.io/badge/🔧_100+_Tools-tools.tlogz.top-1d4ed8?style=for-the-badge)](https://tools.tlogz.top)
+[![Prompts](https://img.shields.io/badge/🧠_28_Prompts-Workflows-60a5fa?style=for-the-badge)](https://tlogz.top/workflows/)
 
 </div>
 
 <div align="center">
 
-![GitHub License](https://img.shields.io/github/license/soms3r/1page)
-![GitHub last commit](https://img.shields.io/github/last-commit/soms3r/1page)
-![GitHub stars](https://img.shields.io/github/stars/soms3r/1page?style=flat)
-![GitHub contributors](https://img.shields.io/github/contributors/soms3r/1page)
-![Static site](https://img.shields.io/badge/static%20site-✓-brightgreen)
-![No database](https://img.shields.io/badge/no%20database-✓-brightgreen)
+![License](https://img.shields.io/badge/license-MIT-2563eb.svg?style=flat&logo=opensourceinitiative&logoColor=white)
+![Stars](https://img.shields.io/github/stars/soms3r/1page?style=flat&logo=github)
+![Last Commit](https://img.shields.io/github/last-commit/soms3r/1page?style=flat&logo=github)
+![Next.js](https://img.shields.io/badge/Next.js-16-000000?style=flat&logo=next.js)
+![Static Export](https://img.shields.io/badge/output-static-4ade80?style=flat)
+![No Database](https://img.shields.io/badge/database-none-4ade80?style=flat)
 
 </div>
 
 ---
 
-## Screenshot
+## ✨ What is 1Page?
 
-<!--
-  Replace this placeholder with an actual screenshot of the TLOGZ homepage or workflow browser.
-  Recommended: 1200×675 PNG or WebP showing the search interface + workflow cards.
-  Example: <img src="docs/screenshots/homepage.png" alt="TLOGZ homepage showing search bar and workflow cards" width="100%">
--->
+**1Page** is the open-source repository behind **[TLOGZ](https://tlogz.top)** — the complete platform of **free browser tools** and **ready-to-run AI prompt workflows**.
+
+Everything runs **client-side**: no sign-up, no uploads, no accounts, no tracking. Your text and numbers stay on your device. Fork it, build it, deploy the static output anywhere.
+
+> **One repo, two pillars.**
+> 🧰 **Free tools** — text, math, health, security, developer, design, creator and utility tools that run entirely in your browser.
+> 🧠 **AI prompt workflows** — structured, fill-in-the-blank prompts you copy and paste into ChatGPT, Claude, or Gemini.
+
+Both pillars live as plain, versioned content in [`content/`](content/) — a single source of truth for the whole platform.
+
+---
+
+## 🚀 Live Network
+
+| Product | What it is | Link |
+| --- | --- | --- |
+| 🌐 **TLOGZ** | Free browser tools + AI prompt workflows | [tlogz.top](https://tlogz.top) |
+| 🔧 **Tools** | 100+ free online tools across 15+ categories | [tools.tlogz.top](https://tools.tlogz.top) |
+| 🇧🇩 **Zero** | Bangla-language toolbox (PDF, photos, typing, tax) | [zero.tlogz.top](https://zero.tlogz.top) |
+| ✍️ **Blog** | Where Words Live — marketing, SEO, tech & trends | [tlogz.com](https://tlogz.com) |
+
+---
+
+## 🧰 Free Tools
+
+<details open>
+<summary><b>Browse all 21 tools</b> — catalog in <a href="content/tools/tools.json"><code>content/tools/tools.json</code></a></summary>
+
+**Text**
+- [Case Converter](https://tlogz.top/tools/case-converter/) — UPPERCASE, lowercase, Title Case, camelCase, snake_case and more.
+- [Word Counter](https://tlogz.top/tools/word-counter/) — words, characters, sentences, paragraphs + reading time.
+- [Find and Replace](https://tlogz.top/tools/find-and-replace/) — replace every match, with case & regex options.
+- [Character Counter](https://tlogz.top/tools/character-counter/) — check against limits for X, SEO meta, SMS, Instagram.
+- [Remove Duplicate Lines](https://tlogz.top/tools/remove-duplicate-lines/) — dedupe a list, order preserved.
+- [Sort Lines](https://tlogz.top/tools/sort-lines/) — sort alphabetically, numerically, by length, or shuffle.
+- [Text to Slug](https://tlogz.top/tools/text-to-slug/) — clean lowercase URL slugs, accents removed.
+
+**Math**
+- [Percentage Calculator](https://tlogz.top/tools/percentage-calculator/) — three everyday percentage calculations.
+- [Unit Converter](https://tlogz.top/tools/unit-converter/) — length, weight, volume, temperature.
+- [Age Calculator](https://tlogz.top/tools/age-calculator/) — exact age + birthday countdown.
+- [Roman Numeral Converter](https://tlogz.top/tools/roman-numeral-converter/) — numbers ↔ Roman numerals (1–3999).
+
+**Health**
+- [BMI Calculator](https://tlogz.top/tools/bmi-calculator/) — BMI + healthy weight range.
+
+**Security**
+- [Password Generator](https://tlogz.top/tools/password-generator/) — strong passwords, generated in-browser, never sent.
+
+**Developer**
+- [JSON Formatter & Validator](https://tlogz.top/tools/json-formatter/) — format, minify, or validate JSON.
+- [Base64 Encoder/Decoder](https://tlogz.top/tools/base64-encoder-decoder/) — full accents & emoji support.
+- [Unix Timestamp Converter](https://tlogz.top/tools/unix-timestamp-converter/) — epoch ↔ dates.
+- [JSON to CSV](https://tlogz.top/tools/json-to-csv/) — JSON array → CSV for Excel/Sheets.
+
+**Design**
+- [Lorem Ipsum Generator](https://tlogz.top/tools/lorem-ipsum-generator/) — paragraphs, sentences, or words.
+- [HEX to RGB](https://tlogz.top/tools/hex-rgb-color-converter/) — HEX → RGB/HSL with a visual picker.
+
+**Creator**
+- [YouTube Chapter Formatter](https://tlogz.top/tools/youtube-chapter-formatter/) — times + topics → chapters.
+
+**Utility**
+- [WiFi QR Code Generator](https://tlogz.top/tools/wifi-qr-code-generator/) — guests scan to join your WiFi.
+
+</details>
+
+---
+
+## 🧠 AI Prompt Workflows
+
+<details>
+<summary><b>Browse all 28 prompts</b> — catalog in <a href="content/workflows/workflows.json"><code>content/workflows/workflows.json</code></a></summary>
+
+**ChatGPT (3)** — Conversational Tutor · GPT Builder Configurator · Prompt Library Manager
+**Claude (2)** — Document Analyzer · Knowledge Base Builder
+**Content (4)** — E-Commerce Product Copywriter · Newsletter Content Creator · Press Release & PR Writer · Video Script Writer
+**Development (4)** — Code Review & Refactoring · Database Schema & SQL Builder · Full-Stack CRUD API Generator · React Component Generator
+**Education (2)** — Lesson Plan & Curriculum Designer · Quiz & Assessment Generator
+**Freelancing (2)** — Client Proposal & Pitch Builder · Freelance Brand & Portfolio Kit
+**Gemini (2)** — Multimodal Analyzer · Research Synthesizer
+**Marketing (5)** — Competitor & Market Research · Email Campaign Builder · Facebook Ad Generator · Multi-Platform Ad Copy Generator · Social Media Content Calendar
+**SEO (3)** — Keyword Research & Clustering · Link Building Outreach · Technical SEO Audit
+**Writing (1)** — SEO Blog Post Writer
+
+👉 Full library with interactive fill-in forms: [tlogz.top/workflows](https://tlogz.top/workflows/)
+
+</details>
+
+---
+
+## 🎯 Key Features
+
+| | Feature | What it means |
+| --- | --- | --- |
+| 🔒 | **Privacy-first** | Everything runs in the browser. Nothing you type is ever uploaded. |
+| 🔎 | **Instant search** | Client-side fuzzy search (Fuse.js) across tools and workflows — no server. |
+| 📋 | **Copy & run** | Every workflow ships a complete prompt with fill-in-the-blank variables. |
+| 🧩 | **Anyone can contribute** | Submit tools and prompts via Issue, Discussion, or Pull Request — no coding required. |
+| 🌐 | **SEO optimized** | Every tool, workflow, category and tag has its own indexable page. |
+| ⚡ | **Zero backend** | Fully static export. No database, no server, no runtime dependencies. |
+| 🎨 | **Modern UI** | Tailwind CSS, GitHub-inspired dark theme, JetBrains Mono accents. |
+| 📖 | **Open source** | Every line of code and every prompt is public and MIT licensed. |
+
+---
+
+## 🏗️ Architecture
 
 ```
-+----------------------------------------------------------+
-|  TLOGZ                                    [Search...]    |
-|  AI is Easy.                                              |
-|                                                           |
-|  [Featured Workflows]                                     |
-|  ┌─────────────────┐  ┌─────────────────┐                |
-|  │ Facebook Ad Gen │  │ SEO Blog Writer │  ...           |
-|  │ Copy ads fast   │  │ Rank on Google  │                |
-|  └─────────────────┘  └─────────────────┘                |
-|                                                           |
-|  Categories: Marketing  Writing  Development  Design ...  |
-+----------------------------------------------------------+
+Content (JSON + Markdown)  →  content/tools · content/workflows · content/settings
+        │
+        ▼
+Build scripts parse content & generate JSON indices  →  public/*.json
+        │
+        ▼
+Next.js static export  →  out/  (a folder of ready-to-serve files)
+        │
+        ▼
+Deploy to any static host  →  visitors search, browse, and copy
 ```
-
----
-
-## What Does TLOGZ Do?
-
-TLOGZ is a library of **AI workflows** — structured prompts that you can copy, customize, and use with any AI tool (ChatGPT, Claude, Gemini, and more).
-
-Instead of figuring out how to prompt an AI from scratch every time, you grab a workflow, fill in your details, and get results.
-
-**Example:** Need a Facebook ad? Open the "Facebook Ad Generator" workflow, tell it your product and audience, and get a complete ad ready to publish.
-
----
-
-## Why TLOGZ Exists
-
-AI tools are powerful, but knowing *how* to talk to them takes time. Good prompts get lost in bookmarks, buried in Twitter threads, or kept private.
-
-TLOGZ fixes that:
-
-- **One place** to find proven prompts
-- **Structured format** so you know exactly what to fill in
-- **Community maintained** — workflows get better over time
-- **Free forever** — no signup, no paywall, no database
-
----
-
-## Key Features
-
-| Feature | What It Means |
-|---------|---------------|
-| **Searchable library** | Find workflows by keyword, category, tag, or AI model |
-| **Copy & run** | Every workflow includes a complete prompt with fill-in-the-blank variables |
-| **Anyone can contribute** | Developers, writers, marketers, students — no coding required |
-| **No account needed** | The site is fully static. No signup, no login, no tracking |
-| **Open source** | Every line of code and every workflow is public on GitHub |
-| **SEO optimized** | Every workflow, category, tag, and model has its own page |
-| **Zero servers** | Runs on cheap shared hosting. No backend, no database, no maintenance |
-
----
-
-## How It Works
-
-```
-You write a workflow in Markdown
-        ↓
-Build scripts turn it into JSON + HTML
-        ↓
-Static files get deployed to a server
-        ↓
-Visitors search, browse, and copy workflows
-```
-
-1. **Content** lives as Markdown files in the GitHub repository
-2. **Build scripts** parse the files and generate searchable JSON indices
-3. **Static export** produces `out/` — a folder of ready-to-serve files
-4. **Deploy** to any static host (or just browse on [tlogz.top](https://tlogz.top))
-
----
-
-## Architecture Overview
 
 | Layer | Technology |
-|-------|------------|
-| Source of truth | [GitHub repository](https://github.com/soms3r/1page) |
-| Content format | Markdown + YAML frontmatter |
-| Framework | [Next.js](https://nextjs.org/) (static export) |
-| Styling | Tailwind CSS |
-| Search | [Fuse.js](https://fusejs.io/) (runs in the browser — no server needed) |
-| Hosting | Any static host (Apache, cPanel, GitHub Pages, Netlify, Cloudflare) |
-| Database | None |
-| Analytics | Umami (optional) |
-
-**No database. No backend server. No runtime dependencies.**
+| --- | --- |
+| Source of truth | [This GitHub repository](https://github.com/soms3r/1page) |
+| Content format | JSON catalogs + Markdown/YAML workflows |
+| Framework | [Next.js](https://nextjs.org/) — static export (`output: 'export'`) |
+| Styling | [Tailwind CSS](https://tailwindcss.com/) |
+| Search | [Fuse.js](https://fusejs.io/) (in-browser, no server) |
+| Markdown | react-markdown + remark-gfm + rehype-sanitize |
+| Analytics | Umami (optional, browser-only) |
+| Database | **None** |
 
 ---
 
-## Directory Structure
+## 📁 Directory Structure
 
 ```
 content/
+  tools/
+    tools.json                 # Catalog of all 21 free tools
   workflows/
-    marketing/facebook-ad-generator.md   # Workflow files organized by category
+    workflows.json             # Catalog of all 28 AI prompt workflows
+    marketing/facebook-ad-generator.md
     writing/seo-blog-post-writer.md
     development/react-component-generator.md
-  settings/                              # Site configuration (JSON files)
+    chatgpt/chatgpt-conversational-tutor.md
+  settings/
+    site.json                  # Site-wide metadata
 
 src/
-  app/                                   # Next.js pages
-  components/                            # Reusable UI components
-  lib/                                   # Shared utilities and types
-  scripts/                               # Build scripts (indices, search, SEO)
+  app/  components/  lib/  scripts/     # Next.js app + build scripts
 
-public/                                  # Generated files (after build)
-  workflows-index.json                   # All workflow metadata
-  search-index.json                      # Client-side search data
-  categories.json                        # Category list
-  tags.json                              # Tag list
-  models.json                            # AI model list
-  stats.json                             # Counts (workflows, categories, etc.)
-
-out/                                     # Final static site (generated, deploy this)
-docs/
-  DEPLOYMENT.md                          # Deployment guide
-  MIGRATION.md                           # Architecture changelog
+public/                 # Generated JSON (after build)
+out/                    # Final static site (generated — deploy this)
+assets/                 # README banner & static media
+docs/                   # DEPLOYMENT.md · MIGRATION.md
 ```
 
 ---
 
-## Quick Start
+## ⚡ Quick Start
 
 ```bash
-# 1. Clone the repository
+# 1. Clone
 git clone https://github.com/soms3r/1page.git
 cd 1page
 
-# 2. Install dependencies
+# 2. Install
 npm install
 
-# 3. Build the site
+# 3. Build
 npm run build
 
-# 4. Serve the output locally
+# 4. Serve locally
 npm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to see the site.
+Open **http://localhost:3000** — that's it. No database, no environment variables, no server setup.
 
-**That is it.** No database setup. No environment variables. No server configuration.
+### Available Scripts
 
----
-
-## Local Development
-
-```bash
-# Start the development server with hot reload
-npm run dev
-```
-
-Changes to workflow files, components, and styles will appear live in the browser.
-
----
-
-## Build Commands
-
-| Command | What It Does |
-|---------|-------------|
-| `npm run dev` | Start development server (live reload) |
+| Command | What it does |
+| --- | --- |
+| `npm run dev` | Start the dev server with hot reload |
 | `npm run build` | Full build: generate indices → static export → copy assets |
 | `npm start` | Serve the built site locally (from `out/`) |
-| `npm run build-index` | Regenerate JSON indices only (skip HTML export) |
-| `npm run search` | Rebuild the search index only |
-| `npm run lint` | Check code for issues |
+| `npm run build-index` | Regenerate JSON indices only |
+| `npm run lint` | Lint the codebase |
 
 ---
 
-## Deployment Options
+## 🚢 Deployment
 
-TLOGZ is a fully static site. The `out/` directory goes anywhere.
+1Page is a fully static site. The `out/` folder goes anywhere.
 
-### Shared Hosting (Apache / cPanel)
+<details>
+<summary><b>Shared hosting (Apache / cPanel)</b></summary>
 
-Upload the `out/` folder via FTP. Add an `.htaccess` file for clean URLs:
+Upload the `out/` folder via FTP and add an `.htaccess` for clean URLs:
 
 ```apache
 RewriteEngine On
@@ -215,9 +237,10 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ $1/index.html [L]
 ```
 
-### GitHub Pages
+</details>
 
-Push the `out/` folder to the `gh-pages` branch, or use GitHub Actions:
+<details>
+<summary><b>GitHub Pages</b></summary>
 
 ```yaml
 name: Deploy to GitHub Pages
@@ -244,239 +267,170 @@ jobs:
       - uses: actions/deploy-pages@v4
 ```
 
-### Netlify
+</details>
 
-Connect your GitHub repository and set:
-
-- **Build command:** `npm run build`
-- **Publish directory:** `out`
-
-### Cloudflare Pages
-
-Connect your GitHub repository and set:
+<details>
+<summary><b>Netlify / Cloudflare Pages / Vercel</b></summary>
 
 - **Build command:** `npm run build`
-- **Build output:** `out`
+- **Publish / output directory:** `out`
 
-**No database configuration. No environment variables. No server setup.**
+</details>
 
-> For a detailed deployment walkthrough, see [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
+> Full walkthrough: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
 
 ---
 
-## GitHub as Source of Truth
+## 📝 Content Format
 
-Everything in TLOGZ starts in this GitHub repository:
+### Tools — `content/tools/tools.json`
 
-- **Workflows** are Markdown files in `content/workflows/`
-- **Site settings** are JSON files in `content/settings/`
-- **Documentation** lives in `docs/`
-- **Source code** is in `src/`
+Each tool is a JSON entry:
 
-No hidden database. No proprietary format. If you can edit a text file, you can contribute to TLOGZ.
+```json
+{
+  "slug": "word-counter",
+  "title": "Word Counter",
+  "tag": "TXT",
+  "category": "text",
+  "description": "Count words, characters, sentences and paragraphs as you type.",
+  "url": "https://tlogz.top/tools/word-counter/",
+  "clientSide": true
+}
+```
 
----
+### Workflows — `content/workflows/<category>/<slug>.md`
 
-## Content Format
-
-Every workflow is a Markdown file with a YAML header. Here is a complete example:
+Each workflow is a Markdown file with a YAML header:
 
 ```markdown
 ---
 title: "Facebook Ad Generator"
 slug: facebook-ad-generator
-description: "Create high-converting Facebook ad copy with structured prompts for audience targeting, creative hooks, and CTAs."
+description: "Create high-converting Facebook ad copy with structured prompts."
 category: marketing
-tags:
-  - facebook
-  - ads
-  - copywriting
-  - social-media
+tags: [facebook, ads, copywriting]
 models:
   best: claude-sonnet-4
-  good:
-    - gpt-4o
-    - gemini-2.5-pro
-  limited:
-    - claude-haiku
-    - gpt-4o-mini
-updated: 2026-05-20
+  good: [gpt-4o, gemini-2.5-pro]
+updated: 2026-10-09
 featured: true
 variables:
   - name: product
-    label: Product/Service Name
+    label: Product / Service
     required: true
     placeholder: "e.g. BudgetTracker Pro"
-  - name: audience
-    label: Target Audience
-    required: true
-    placeholder: "e.g. Small business owners aged 25-45"
-  - name: tone
-    label: Tone of Voice
-    required: false
-    placeholder: "e.g. Professional, casual, urgent"
 ---
 
-You are a Facebook ad copywriting expert. Write a high-converting Facebook ad for the following:
+You are a direct-response copywriter. Write a Facebook ad for:
 
-**Product/Service**: {{product}}
-**Target Audience**: {{audience}}
-**Tone**: {{tone || "Professional"}}
-
-Structure the ad with:
-1. **Hook** – First 1-2 lines that stop the scroll
-2. **Body** – 2-3 short paragraphs explaining the value proposition
-3. **Social Proof** – One line of credibility
-4. **Call to Action** – Clear, urgent CTA
+**Product**: {{product}}
+**Audience**: {{audience || "small business owners"}}
 ```
-
-### Frontmatter Fields
 
 | Field | Required | Description |
-|-------|----------|-------------|
-| `title` | Yes | Human-readable name of the workflow |
-| `slug` | Yes | URL-friendly identifier (lowercase, hyphens) |
-| `description` | Yes | One-line summary (appears in search results) |
-| `category` | Yes | One of: `marketing`, `development`, `writing`, `design`, `business`, `research`, `education`, `productivity`, `other` |
-| `tags` | No | Keywords for search filtering |
-| `models.best` | No | Recommended AI model for this workflow |
-| `models.good` | No | Array of good alternative models |
-| `models.limited` | No | Array of capable but limited models |
-| `updated` | Yes | ISO date of last update (YYYY-MM-DD) |
-| `featured` | No | Set to `true` to show on the featured page |
-| `variables` | No | Array of input fields with labels, validation, and placeholders |
+| --- | --- | --- |
+| `title` | ✅ | Human-readable name |
+| `slug` | ✅ | URL-friendly id (lowercase, hyphens) |
+| `description` | ✅ | One-line summary shown in search |
+| `category` | ✅ | `marketing` · `development` · `writing` · `chatgpt` · `claude` · `gemini` · `content` · `seo` · `education` · `freelancing` |
+| `tags` | — | Keywords for filtering |
+| `models.best` / `good` / `limited` | — | Recommended AI models |
+| `updated` | ✅ | ISO date (`YYYY-MM-DD`) |
+| `featured` | — | `true` to show on the featured page |
+| `variables` | — | Input fields with labels & placeholders |
 
-### Variables
-
-Use `{{variable_name}}` in the workflow body where users should fill in their own information:
-
-```markdown
-Write a {{type}} post about {{topic}} targeting {{audience}}.
-```
-
-Use `{{var || "default"}}` for optional inputs with a fallback value:
-
-```markdown
-Length: {{wordCount || "1000"}} words
-```
+**Variables:** use `{{name}}` for inputs and `{{var || "default"}}` for optional values with a fallback.
 
 ---
 
-## How to Add a Workflow
+## 🤝 How to Contribute
 
-**You do not need to know how to code.**
+Everyone is welcome — you don't need to code.
 
-### Option A: Submit via GitHub Issue (Easiest)
+| I want to… | Do this | Skill |
+| --- | --- | --- |
+| Submit a tool or a prompt | Open a [New Issue](https://github.com/soms3r/1page/issues/new/choose) | Anyone |
+| Share for feedback | Start a [Discussion](https://github.com/soms3r/1page/discussions) | Anyone |
+| Improve content | Edit a file in `content/` and open a PR | Anyone |
+| Fix a bug / add a feature | Fork → branch → [Pull Request](https://github.com/soms3r/1page/pulls) | Developer |
 
-1. Go to the [New Issue page](https://github.com/soms3r/1page/issues/new/choose)
-2. Choose the "Workflow Submission" template
-3. Fill in the form (title, description, prompt, category)
-4. Click submit
-
-A maintainer will review your workflow and add it to the library.
-
-### Option B: Submit via GitHub Discussion
-
-1. Start a [new Discussion](https://github.com/soms3r/1page/discussions/new?category=workflows)
-2. Share your workflow
-3. Get feedback from the community
-
-### Option C: Fork and Pull Request (For Developers)
-
-1. **Fork** this repository — click the "Fork" button at the top of [the repo page](https://github.com/soms3r/1page)
-2. **Clone** your fork to your computer
-3. **Create** a file at `content/workflows/<category>/<slug>.md`
-4. **Commit** and push your changes
-5. **Open a Pull Request** — GitHub will guide you through this
+See **[CONTRIBUTING.md](CONTRIBUTING.md)** for details. **No contribution is too small** — a single tool or prompt can help hundreds of people.
 
 ---
 
-## How to Contribute
+## 🗺️ Roadmap
 
-Everyone is welcome. Here are the ways to help:
-
-| Activity | How | Skill Level |
-|----------|-----|-------------|
-| Submit a workflow | Open an Issue or Discussion | Anyone |
-| Improve an existing workflow | Click "Edit on GitHub" on any workflow page | Anyone |
-| Report a bug | Open an Issue | Anyone |
-| Improve documentation | Edit files in `docs/` | Beginner |
-| Translate the UI | Help localize the interface | Intermediate |
-| Review pull requests | Check submitted changes | Developer |
-| Write code | Fix bugs, add features, improve build scripts | Developer |
-| Star the repo | Click the ⭐ button at the top of the page | Anyone |
-
-**No contribution is too small.** A single workflow can help hundreds of people.
+- [x] Unified content source for **tools + prompts**
+- [x] Static-first architecture (no backend, no database)
+- [x] Client-side search across tools & workflows
+- [x] SEO: per-tool, per-workflow, per-tag pages + sitemap
+- [x] 100+ free browser tools ([tools.tlogz.top](https://tools.tlogz.top))
+- [x] Bangla-language toolbox ([zero.tlogz.top](https://zero.tlogz.top))
+- [ ] Community voting & contributor leaderboard
+- [ ] Multilingual UI & content support
+- [ ] Browser extension for quick access
+- [ ] Public API for programmatic access
 
 ---
 
-## Project Roadmap
+## ❓ FAQ
 
-Here is what we are working on:
-
-- [ ] More workflows across all categories
-- [ ] Community voting on workflows
-- [ ] Contributor leaderboard
-- [ ] Multilingual workflow support
-- [ ] Chrome extension for quick access
-- [ ] API for programmatic workflow access
-
-Want to help with any of these? Open an Issue or start a Discussion.
+**Do I need an account?** No. The site is fully static — no signup, no login, no tracking.
+**Is there a database?** No. Everything is content in this repo, built at deploy time.
+**Can I run my own copy?** Yes. Fork it, `npm run build`, and deploy `out/` anywhere.
+**Which AI models work?** Any. Workflows *recommend* models, but paste them into any tool.
+**Can I use this commercially?** Yes — MIT licensed. Use it however you like.
 
 ---
 
-## FAQ
+## 👥 Credits & Maintainers
 
-**Q: Do I need an account to use TLOGZ?**
+1Page is designed, built, and maintained by:
 
-No. The site is fully static. No signup, no login, no tracking.
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <a href="https://github.com/tbahsan">
+        <img src="https://github.com/tbahsan.png?size=140" width="120" style="border-radius:50%" alt="Tasneem Bin Ahsan"/>
+      </a>
+      <br/>
+      <a href="https://github.com/tbahsan"><b>Tasneem Bin Ahsan</b></a>
+      <br/>
+      <sub>🎨 Creator of TLOGZ · Web Designer &amp; Developer · Bengali poet</sub>
+      <br/>
+      <a href="https://github.com/tbahsan"><code>@tbahsan</code></a> ·
+      <a href="https://tlogz.com">tlogz.com</a>
+    </td>
+    <td align="center" width="50%">
+      <a href="https://github.com/soms3r">
+        <img src="https://github.com/soms3r.png?size=140" width="120" style="border-radius:50%" alt="Somser Ali"/>
+      </a>
+      <br/>
+      <a href="https://github.com/soms3r"><b>Somser Ali</b></a>
+      <br/>
+      <sub>🛠️ Lead Maintainer · Open-source tooling · OSINT &amp; research tools</sub>
+      <br/>
+      <a href="https://github.com/soms3r"><code>@soms3r</code></a> ·
+      <a href="https://github.com/TBA-OpenIntel">TBA-OpenIntel</a>
+    </td>
+  </tr>
+</table>
 
-**Q: Do I need to know how to code to contribute?**
-
-No. You can submit workflows through GitHub Issues or Discussions without writing a single line of code.
-
-**Q: Is there a database?**
-
-No. Everything is stored as Markdown files in the GitHub repository. The site is built from these files at deploy time.
-
-**Q: Can I run my own copy?**
-
-Yes. Fork the repository, run `npm run build`, and deploy the `out/` folder anywhere.
-
-**Q: What AI models are supported?**
-
-Any model. Workflows recommend `best`, `good`, and `limited` models, but you can use any AI tool you like.
-
-**Q: Is analytics required?**
-
-No. Analytics (Umami) is optional and runs entirely in the browser. The site works perfectly without it.
-
-**Q: Can I use workflows commercially?**
-
-Yes. The content and code are open source. Use them however you like.
+**Sponsored by:** [tlogz.com](https://tlogz.com) · _Where Words Live_
 
 ---
 
-## License
+## 📄 License
 
-Open source. Licensed under the [MIT License](LICENSE).
-
----
-
-## Credits
-
-Created by [Tasneem Bin Ahsan](https://github.com/TBAhsan).
-
-**Website:** [tlogz.top](https://tlogz.top)
-
-**Sponsored by:** [tlogz.com](https://tlogz.com)
+Open source under the **[MIT License](LICENSE)**. You are free to use, modify, and distribute this project — including commercially.
 
 ---
 
 <div align="center">
 
-Built by the community, for everyone.
+**Built by the community, for everyone.**
 
-[Explore Workflows](https://tlogz.top) · [Star on GitHub](https://github.com/soms3r/1page) · [Submit a Workflow](https://github.com/soms3r/1page/issues/new/choose)
+[🌐 Explore TLOGZ](https://tlogz.top) · [⭐ Star on GitHub](https://github.com/soms3r/1page) · [✍️ Submit a Workflow](https://github.com/soms3r/1page/issues/new/choose) · [🐛 Report a Bug](https://github.com/soms3r/1page/issues)
 
 </div>
